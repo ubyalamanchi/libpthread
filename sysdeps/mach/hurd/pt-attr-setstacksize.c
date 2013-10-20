@@ -20,16 +20,10 @@
 #include <pthread.h>
 #include <pt-internal.h>
 
-/* We use fixed sized stacks which require proper alignment.  */
-#define __pthread_stacksize __pthread_default_attr.stacksize
-
 int
 pthread_attr_setstacksize (pthread_attr_t *attr,
 			   size_t stacksize)
 {
-  if (stacksize != __pthread_stacksize)
-    return EINVAL;
-
   attr->stacksize = stacksize;
   return 0;
 }

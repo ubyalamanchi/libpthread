@@ -24,8 +24,6 @@
 #include <mach.h>
 #include <mach/mig_support.h>
 
-#include <hurd/threadvar.h>
-
 #include <pt-internal.h>
 
 __thread struct __pthread *___pthread_self;
@@ -76,12 +74,6 @@ init_routine (void)
 
   /* Make MiG code thread aware.  */
   __mig_init (thread->stackaddr);
-
-  /* Make sure we can find the per-thread variables.  */
-  __hurd_threadvar_stack_mask = ~(__pthread_default_attr.stacksize - 1);
-  __hurd_threadvar_stack_offset
-    = (__pthread_default_attr.stacksize
-       - __hurd_threadvar_max * sizeof (uintptr_t));
 
   return thread->mcontext.sp;
 }

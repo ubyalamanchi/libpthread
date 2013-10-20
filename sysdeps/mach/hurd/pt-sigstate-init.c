@@ -18,20 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <pthread.h>
-#include <hurd/threadvar.h>
-
 #include <pt-internal.h>
 
 error_t
 __pthread_sigstate_init (struct __pthread *thread)
 {
-  void **location =
-    (void *) __hurd_threadvar_location_from_sp (_HURD_THREADVAR_SIGSTATE,
-						thread->stackaddr);
-
-  /* The real initialization happens internally in glibc the first
-     time that _hurd_thead_sigstate is called.  */
-  *location = 0;
-
+  /* Nothing to do.  */
   return 0;
 }

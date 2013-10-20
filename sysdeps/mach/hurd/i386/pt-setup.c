@@ -32,13 +32,7 @@
     -----------------
    |  0              |
     -----------------
-   |                 |
-   |  Fast TSD       |
-   |                 |
-    -----------------
-
-    We need to reserve __hurd_threadvar_max `unsigned long int's' of
-    (fast) thread-specific data (TSD) for the Hurd.  */
+ */
 
 /* Set up the stack for THREAD, such that it appears as if
    START_ROUTINE and ARG were passed to the new thread's entry-point.
@@ -53,9 +47,6 @@ stack_setup (struct __pthread *thread,
   /* Calculate the top of the new stack.  */
   bottom = thread->stackaddr;
   top = (uintptr_t *) ((uintptr_t) bottom + thread->stacksize);
-
-  /* Next, make room for the TSDs.  */
-  top -= __hurd_threadvar_max;
 
   if (start_routine)
     {

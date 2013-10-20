@@ -20,16 +20,10 @@
 #include <pthread.h>
 #include <pt-internal.h>
 
-/* We use fixed sized stacks which require proper alignment.  */
-#define __pthread_stacksize __pthread_default_attr.stacksize
-
 int
 pthread_attr_setstackaddr (pthread_attr_t *attr,
 			   void *stackaddr)
 {
-  if ((long) stackaddr & (__pthread_stacksize - 1))
-    return EINVAL;
-
   attr->stackaddr = stackaddr;
   return 0;
 }

@@ -114,11 +114,12 @@ __pthread_create_internal (struct __pthread **thread,
   /* Find a stack.  There are several scenarios: if a detached thread
      kills itself, it has no way to deallocate its stack, thus it
      leaves PTHREAD->stack set to true.  We try to reuse it here,
-     however, if the user supplied a stack, we cannot use the old one.
-     Right now, we simply deallocate it.  */
+     however, if the user supplied a stack or changes the size,
+     we cannot use the old one.  Right now, we simply deallocate it.  */
   if (pthread->stack)
     {
-      if (setup->stackaddr != __pthread_default_attr.stackaddr)
+      if ((setup->stackaddr && setup->stackaddr != pthread->stackaddr)
+       || (setup->stacksize != pthread->stacksize))
 	{
 	  __pthread_stack_dealloc (pthread->stackaddr,
 				   pthread->stacksize);

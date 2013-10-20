@@ -24,18 +24,13 @@ int
 pthread_attr_setstacksize (pthread_attr_t *attr,
 			   size_t stacksize)
 {
-  if (stacksize == __pthread_default_attr.stacksize)
-    {
-      attr->stacksize = stacksize;
+  attr->stacksize = stacksize;
 
-      /* The guard size cannot be larger than the stack itself, as
-	 such, if the new stack size is smaller than the guard size,
-	 we squash the guard size.  */
-      if (attr->guardsize > attr->stacksize)
-	attr->guardsize = attr->stacksize;
+  /* The guard size cannot be larger than the stack itself, as
+     such, if the new stack size is smaller than the guard size,
+     we squash the guard size.  */
+  if (attr->guardsize > attr->stacksize)
+    attr->guardsize = attr->stacksize;
 
-      return 0;
-    }
-
-  return ENOTSUP;
+  return 0;
 }

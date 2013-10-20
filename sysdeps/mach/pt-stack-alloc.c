@@ -24,8 +24,6 @@
 
 #include <pt-internal.h>
 
-#define __pthread_stacksize __pthread_default_attr.stacksize
-
 /* The next address to use for stack allocation.  */
 static vm_address_t next_stack_base = VM_MIN_ADDRESS;
 
@@ -40,9 +38,6 @@ __pthread_stack_alloc (void **stackaddr, size_t stacksize)
 {
   vm_offset_t base;
   int i = 0;
-
-  if (stacksize != __pthread_stacksize)
-    return EINVAL;
 
  get_stack:
   i ++;

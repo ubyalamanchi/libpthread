@@ -22,8 +22,6 @@
 
 #include <mach.h>
 
-#include <hurd/threadvar.h>
-
 /* XXX */
 #define _POSIX_THREAD_THREADS_MAX	64
 
