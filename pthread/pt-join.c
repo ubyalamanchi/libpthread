@@ -64,9 +64,11 @@ pthread_join (pthread_t thread, void **status)
 
       /* Destroy the stack, the kernel resources and the control
 	 block.  */
-      assert (pthread->stack);
-      __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
-      pthread->stack = 0;
+      if (pthread->stack)
+	{
+	  __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
+	  pthread->stack = 0;
+	}
 
       __pthread_thread_dealloc (pthread);
 

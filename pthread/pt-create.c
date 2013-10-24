@@ -129,13 +129,19 @@ __pthread_create_internal (struct __pthread **thread,
     }
   else
     {
-      err = __pthread_stack_alloc (&pthread->stackaddr,
-				   setup->stacksize);
-      if (err)
-	goto failed_stack_alloc;
-
       pthread->stacksize = setup->stacksize;
-      pthread->stack = 1;
+
+      if (setup->stackaddr)
+	pthread->stackaddr = setup->stackaddr;
+      else
+	{
+	  err = __pthread_stack_alloc (&pthread->stackaddr,
+				       setup->stacksize);
+	  if (err)
+	    goto failed_stack_alloc;
+
+	  pthread->stack = 1;
+	}
     }
 
   /* Allocate the kernel thread and other required resources.  */
