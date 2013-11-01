@@ -16,5 +16,8 @@ EXTERN(__mutex_unlock_solid)
 EXTERN(_cthreads_flockfile)
 EXTERN(_cthreads_funlockfile)
 EXTERN(_cthreads_ftrylockfile)
+/* To get the sigthread stack layout on fork */
+EXTERN(pthread_getattr_np)
+EXTERN(pthread_attr_getstack)
 
 GROUP(-lpthread2_pic -lihash_pic)
