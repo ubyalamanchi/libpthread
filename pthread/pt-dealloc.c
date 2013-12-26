@@ -23,6 +23,8 @@
 
 #include <pt-internal.h>
 
+#include <bits/pt-atomic.h>
+
 /* List of thread structures corresponding to free thread IDs.  */
 extern struct __pthread *__pthread_free_threads;
 extern pthread_mutex_t __pthread_free_threads_lock;
@@ -33,6 +35,9 @@ void
 __pthread_dealloc (struct __pthread *pthread)
 {
   assert (pthread->state != PTHREAD_TERMINATED);
+
+  if (! __atomic_dec_and_test (&pthread->nr_refs))
+    return;
 
   /* Withdraw this thread from the thread ID lookup table.  */
   __pthread_setid (pthread->thread, NULL);

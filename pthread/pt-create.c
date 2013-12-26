@@ -103,46 +103,29 @@ __pthread_create_internal (struct __pthread **thread,
   pthread->state = (setup->detachstate == PTHREAD_CREATE_DETACHED
 		    ? PTHREAD_DETACHED : PTHREAD_JOINABLE);
 
-  /* If the user supplied a stack, it is not our responsibility to
-     setup a stack guard.  */
   if (setup->stackaddr)
-    pthread->guardsize = 0;
-  else
-    pthread->guardsize = (setup->guardsize <= setup->stacksize
-			  ? setup->guardsize : setup->stacksize);
-
-  /* Find a stack.  There are several scenarios: if a detached thread
-     kills itself, it has no way to deallocate its stack, thus it
-     leaves PTHREAD->stack set to true.  We try to reuse it here,
-     however, if the user supplied a stack or changes the size,
-     we cannot use the old one.  Right now, we simply deallocate it.  */
-  if (pthread->stack)
     {
-      if ((setup->stackaddr && setup->stackaddr != pthread->stackaddr)
-       || (setup->stacksize != pthread->stacksize))
-	{
-	  __pthread_stack_dealloc (pthread->stackaddr,
-				   pthread->stacksize);
-	  pthread->stackaddr = setup->stackaddr;
-	  pthread->stacksize = setup->stacksize;
-	}
+      pthread->stackaddr = setup->stackaddr;
+
+      /* If the user supplied a stack, it is not our responsibility to
+	 setup a stack guard.  */
+      pthread->guardsize = 0;
+      pthread->stack = 0;
     }
   else
     {
-      pthread->stacksize = setup->stacksize;
+      /* Allocate a stack.  */
+      err = __pthread_stack_alloc (&pthread->stackaddr,
+				   setup->stacksize);
+      if (err)
+	goto failed_stack_alloc;
 
-      if (setup->stackaddr)
-	pthread->stackaddr = setup->stackaddr;
-      else
-	{
-	  err = __pthread_stack_alloc (&pthread->stackaddr,
-				       setup->stacksize);
-	  if (err)
-	    goto failed_stack_alloc;
-
-	  pthread->stack = 1;
-	}
+      pthread->guardsize = (setup->guardsize <= setup->stacksize
+			   ? setup->guardsize : setup->stacksize);
+      pthread->stack = 1;
     }
+
+  pthread->stacksize = setup->stacksize;
 
   /* Allocate the kernel thread and other required resources.  */
   err = __pthread_thread_alloc (pthread);
@@ -168,6 +151,10 @@ __pthread_create_internal (struct __pthread **thread,
   err = __pthread_sigstate_init (pthread);
   if (err)
     goto failed_sigstate;
+
+  /* If the new thread is joinable, add a reference for the caller.  */
+  if (pthread->state == PTHREAD_JOINABLE)
+    pthread->nr_refs++;
 
   /* Set the new thread's signal mask and set the pending signals to
      empty.  POSIX says: "The signal mask shall be inherited from the
@@ -216,6 +203,10 @@ __pthread_create_internal (struct __pthread **thread,
   return 0;
 
  failed_starting:
+  /* If joinable, a reference was added for the caller.  */
+  if (pthread->state == PTHREAD_JOINABLE)
+    __pthread_dealloc (pthread);
+
   __pthread_setid (pthread->thread, NULL);
   __atomic_dec (&__pthread_total);
  failed_sigstate:
@@ -227,10 +218,14 @@ __pthread_create_internal (struct __pthread **thread,
  failed_thread_tls_alloc:
 #endif /* ENABLE_TLS */
   __pthread_thread_dealloc (pthread);
-  __pthread_thread_halt (pthread);
+  __pthread_thread_terminate (pthread);
+
+  /* __pthread_thread_terminate has taken care of deallocating the stack and
+     the thread structure.  */
+  goto failed;
  failed_thread_alloc:
-  __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
-  pthread->stack = 0;
+  if (pthread->stack)
+    __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
  failed_stack_alloc:
   __pthread_dealloc (pthread);
  failed:

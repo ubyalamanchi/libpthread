@@ -67,44 +67,29 @@ create_wakeupmsg (struct __pthread *thread)
 int
 __pthread_thread_alloc (struct __pthread *thread)
 {
-  if (thread->have_kernel_resources)
-    return 0;
-
+  static int do_create;
   error_t err;
 
   err = create_wakeupmsg (thread);
   if (err)
     return err;
 
-  /* If there are no pthreads in the system then the pthread library
-     is bootstrapping and the main thread must create initialize
-     itself.  The thread itself is already running, it just has not
-     pthread context.  We want to reuse what it already has (including
-     the kernel thread), however, we must determine which thread is
-     the main thread.
-
-     We cannot test if __pthread_total is one as we later decrement
-     before creating the signal thread.  Currently, we check if
-     __pthread_num_threads--the number of allocated thread
-     structures--is one.  __pthread_alloc has already been called in
-     __pthread_create_internal for us.  This predicate could be improved,
-     however, it is sufficient for now.  */
-  if (__pthread_num_threads == 1)
+  if (! do_create)
     {
       assert (__pthread_total == 0);
       thread->kernel_thread = __mach_thread_self ();
-      /* We implicitly hold a reference drop the one that we just
-	 acquired.  */
-      __mach_port_deallocate (__mach_task_self (), thread->kernel_thread);
+      do_create = 1;
     }
   else
     {
       err = __thread_create (__mach_task_self (), &thread->kernel_thread);
       if (err)
-	return EAGAIN;
+	{
+	  __mach_port_destroy (__mach_task_self (),
+			       thread->wakeupmsg.msgh_remote_port);
+	  return EAGAIN;
+	}
     }
-
-  thread->have_kernel_resources = 1;
 
   return 0;
 }

@@ -48,12 +48,6 @@ __pthread_exit (void *status)
 
   pthread_setcancelstate (oldstate, &oldstate);
 
-  /* Destory any thread specific data.  */
-  __pthread_destroy_specific (self);
-
-  /* Destroy any signal state.  */
-  __pthread_sigstate_destroy (self);
-
   /* Decrease the number of threads.  We use an atomic operation to
      make sure that only the last thread calls `exit'.  */
   if (__atomic_dec_and_test (&__pthread_total))
@@ -77,14 +71,7 @@ __pthread_exit (void *status)
       break;
 
     case PTHREAD_DETACHED:
-      /* Make sure that nobody can reference this thread anymore, and
-         mark it as terminated.  Our thread ID will immediately become
-         available for re-use.  For obvious reasons, we cannot
-         deallocate our own stack and TLS.  However, it will eventually be
-         reused when this thread structure is recycled.  */
       __pthread_mutex_unlock (&self->state_lock);
-
-      __pthread_dealloc (self);
 
       break;
 
@@ -105,12 +92,22 @@ __pthread_exit (void *status)
       break;
     }
 
-  /* Note that after this point the resources used by this thread can
-     be freed at any moment if another thread joins or detaches us.
-     This means that before freeing any resources, such a thread
-     should make sure that this thread is really halted.  */
-  
-  __pthread_thread_halt (self);
+  /* Destroy any thread specific data.  */
+  __pthread_destroy_specific (self);
+
+  /* Destroy any signal state.  */
+  __pthread_sigstate_destroy (self);
+
+  /* Kernel resources may be used to implement synchronization objects,
+     release them late.  */
+  __pthread_thread_dealloc (self);
+
+  /* Self terminating requires TLS, so defer the release of the TCB until
+     the thread structure is reused.  */
+
+  /* Terminate the kernel thread, release the stack and drop the
+     self reference.  */
+  __pthread_thread_terminate (self);
 
   /* NOTREACHED */
   abort ();

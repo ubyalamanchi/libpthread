@@ -27,9 +27,10 @@
 int
 __pthread_thread_start (struct __pthread *thread)
 {
+  static int do_start;
   error_t err;
 
-  if (__pthread_num_threads == 1)
+  if (! do_start)
     {
       /* The main thread is already running: do nothing.  */
       assert (__pthread_total == 1);
@@ -38,6 +39,7 @@ __pthread_thread_start (struct __pthread *thread)
                  __mach_port_deallocate (__mach_task_self (),
 					 thread->kernel_thread);
 		 ok; }));
+      do_start = 1;
     }
   else
     {

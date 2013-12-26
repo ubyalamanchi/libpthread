@@ -50,30 +50,16 @@ pthread_detach (pthread_t thread)
 	 consequences instead of blocking indefinitely.  */
       pthread_cond_broadcast (&pthread->state_cond);
       __pthread_mutex_unlock (&pthread->state_lock);
+
+      __pthread_dealloc (pthread);
       break;
 
     case PTHREAD_EXITED:
-      /* THREAD has already exited.  Make sure that nobody can
-         reference it anymore, and mark it as terminated.  */
-
       __pthread_mutex_unlock (&pthread->state_lock);
 
-      /* Make sure the thread is not running before we remove its
-         stack.  (The only possibility is that it is in a call to
-         __pthread_thread_halt itself, but that is enough to cause a
-         sigsegv.)  */
-      __pthread_thread_halt (pthread);
-
-      /* Destroy the stack, the kernel resources and the control
-	 block.  */
-      if (pthread->stack)
-	{
-	  __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
-	  pthread->stack = 0;
-	}
-
-      __pthread_thread_dealloc (pthread);
-
+      /* THREAD has already exited.  PTHREAD remained after the thread
+	 exited in order to provide the exit status, but it turns out
+	 it won't be needed.  */
       __pthread_dealloc (pthread);
       break;
 

@@ -47,7 +47,7 @@ struct __pthread *__pthread_free_threads;
 pthread_mutex_t __pthread_free_threads_lock;
 
 static inline error_t
-initialize_pthread (struct __pthread *new, int recycling)
+initialize_pthread (struct __pthread *new)
 {
   error_t err;
 
@@ -55,20 +55,13 @@ initialize_pthread (struct __pthread *new, int recycling)
   if (err)
     return err;
 
+  new->nr_refs = 1;
   new->cancel_lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
   new->cancel_hook = NULL;
   new->cancel_hook_arg = NULL;
   new->cancel_state = PTHREAD_CANCEL_ENABLE;
   new->cancel_type = PTHREAD_CANCEL_DEFERRED;
   new->cancel_pending = 0;
-
-  if (recycling)
-    /* Since we are recycling PTHREAD, we can assume certains things
-       about PTHREAD's current state and save some cycles by not
-       rewriting the memory.  */
-    return 0;
-
-  new->stack = 0;
 
   new->state_lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
   new->state_cond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
@@ -117,22 +110,15 @@ __pthread_alloc (struct __pthread **pthread)
 
   if (new)
     {
-      /* The thread may still be running.  Make sure it is stopped.
-	 If this is the case, then the thread is either at the end of
-	 __pthread_dealloc or in __pthread_thread_halt.  In both
-	 cases, we are interrupt it.  */
-      __pthread_thread_halt (new);
-
 #ifdef ENABLE_TLS
       if (new->tcb)
 	{
 	  /* Drop old values */
 	  _dl_deallocate_tls (new->tcb, 1);
-	  new->tcb = NULL;
 	}
 #endif /* ENABLE_TLS */
 
-      err = initialize_pthread (new, 1);
+      err = initialize_pthread (new);
       if (! err)
 	*pthread = new;
       return err;
@@ -143,7 +129,7 @@ __pthread_alloc (struct __pthread **pthread)
   if (new == NULL)
     return ENOMEM;
 
-  err = initialize_pthread (new, 0);
+  err = initialize_pthread (new);
   if (err)
     {
       free (new);

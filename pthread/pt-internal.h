@@ -72,6 +72,12 @@ struct __pthread
   /* Thread ID.  */
   pthread_t thread;
 
+  __atomic_t nr_refs;   /* Detached threads have a self reference only,
+			   while joinable threads have two references.
+			   These are used to keep the structure valid at
+			   thread destruction.  Detaching/joining a thread
+			   drops a reference.  */
+
   /* Cancellation.  */
   pthread_mutex_t cancel_lock;  /* Protect cancel_xxx members.  */
   void (*cancel_hook)(void *);	/* Called to unblock a thread blocking
@@ -208,12 +214,13 @@ extern int __pthread_create_internal (struct __pthread **__restrict pthread,
 				      void *__restrict arg);
 
 /* Allocate a new thread structure and a pthread thread ID (but not a
-   kernel thread or a stack).  */
+   kernel thread or a stack).  THREAD has one reference.  */
 extern int __pthread_alloc (struct __pthread **thread);
 
 /* Deallocate the thread structure.  This is the dual of
-   __pthread_alloc (N.B. it does not call __pthread_stack_alloc nor
-   __pthread_thread_halt).  */
+   __pthread_alloc (N.B. it does not call __pthread_stack_dealloc nor
+   __pthread_thread_terminate).  THREAD loses one reference and is
+   released if the reference counter drops to 0.  */
 extern void __pthread_dealloc (struct __pthread *thread);
 
 
@@ -238,22 +245,23 @@ extern int __pthread_setup (struct __pthread *__restrict thread,
    resources) for THREAD; it must not be placed on the run queue.  */
 extern int __pthread_thread_alloc (struct __pthread *thread);
 
-/* Deallocate any kernel resources associated with THREAD.  The thread
-   must not be running (that is, if __pthread_thread_start was called,
-   __pthread_thread_halt must first be called).  This function will
-   never be called by a thread on itself.  In the case that a thread
-   exits, its thread structure will be cached and cleaned up
-   later.  */
+/* Deallocate any kernel resources associated with THREAD.  */
 extern void __pthread_thread_dealloc (struct __pthread *thread);
 
 /* Start THREAD making it eligible to run.  */
 extern int __pthread_thread_start (struct __pthread *thread);
 
-/* Stop the kernel thread associated with THREAD.  This function may
-   be called by two threads in parallel.  In particular, by the thread
-   itself and another thread trying to join it.  This function must be
-   implemented such that this is safe.  */
-extern void __pthread_thread_halt (struct __pthread *thread);
+/* Terminate the kernel thread associated with THREAD, and deallocate its
+   stack.  In addition, THREAD loses one reference.
+
+   This function can be called by any thread, including the target thread.
+   Since some resources that are destroyed along the kernel thread are
+   stored in thread-local variables, the conditions required for this
+   function to behave correctly are a bit unusual : as long as the target
+   thread hasn't been started, any thread can terminate it, but once it
+   has started, no other thread can terminate it, so that thread-local
+   variables created by that thread are correctly released.  */
+extern void __pthread_thread_terminate (struct __pthread *thread);
 
 
 /* Called by a thread just before it calls the provided start

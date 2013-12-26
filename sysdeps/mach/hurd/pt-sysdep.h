@@ -30,8 +30,7 @@
 
 #define PTHREAD_SYSDEP_MEMBERS \
   thread_t kernel_thread;      \
-  mach_msg_header_t wakeupmsg; \
-  int have_kernel_resources;
+  mach_msg_header_t wakeupmsg;
 
 extern __thread struct __pthread *___pthread_self;
 #define _pthread_self()                                            \

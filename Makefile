@@ -121,7 +121,7 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-thread-alloc							    \
 	pt-thread-dealloc						    \
 	pt-thread-start							    \
-	pt-thread-halt							    \
+	pt-thread-terminate						    \
 	pt-startup							    \
 									    \
 	pt-getconcurrency pt-setconcurrency				    \

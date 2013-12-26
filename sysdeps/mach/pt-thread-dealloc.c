@@ -24,8 +24,7 @@
 #include <pt-internal.h>
 
 /* Deallocate any kernel resources associated with THREAD except don't
-   halt the thread itself.  On return, the thread will be marked as
-   dead and __pthread_halt will be called.  */
+   terminate the thread itself.  */
 void
 __pthread_thread_dealloc (struct __pthread *thread)
 {

@@ -65,6 +65,11 @@ init_routine (void)
   err = __pthread_create_internal (&thread, 0, 0, 0);
   assert_perror (err);
 
+  /* XXX The caller copies the command line arguments and the environment
+     to the new stack.  Pretend it wasn't allocated so that it remains
+     valid if the main thread terminates.  */
+  thread->stack = 0;
+
   ___pthread_self = thread;
 
   /* Decrease the number of threads, to take into account that the
