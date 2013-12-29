@@ -24,8 +24,7 @@
 
 #include <pt-internal.h>
 
-/* FIXME Normally const, see sysdeps/mach/hurd/pt-sysdep.c.  */
-struct __pthread_attr __pthread_default_attr =
+const struct __pthread_attr __pthread_default_attr =
 {
   schedparam: { sched_priority: 0 },
   stacksize: PTHREAD_STACK_DEFAULT,
