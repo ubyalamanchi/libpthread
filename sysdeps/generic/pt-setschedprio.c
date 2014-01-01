@@ -25,3 +25,5 @@ pthread_setschedprio (pthread_t thread, int prio)
 {
   return ENOSYS;
 }
+
+stub_warning (pthread_setschedprio)

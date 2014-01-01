@@ -25,3 +25,5 @@ pthread_key_create (pthread_key_t *key, void (*destructor) (void *))
 {
   return ENOSYS;
 }
+
+stub_warning (pthread_key_create)

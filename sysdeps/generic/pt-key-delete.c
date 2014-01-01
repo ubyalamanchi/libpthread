@@ -25,3 +25,5 @@ pthread_key_delete (pthread_key_t key)
 {
   return ENOSYS;
 }
+
+stub_warning (pthread_key_delete)

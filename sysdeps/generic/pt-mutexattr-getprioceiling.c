@@ -26,3 +26,5 @@ pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
 {
   return ENOSYS;
 }
+
+stub_warning (pthread_mutexattr_getprioceiling)
