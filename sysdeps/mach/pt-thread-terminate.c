@@ -68,5 +68,11 @@ __pthread_thread_terminate (struct __pthread *thread)
   err = __thread_terminate_release (kernel_thread, mach_task_self (),
 				    kernel_thread, reply_port,
 				    stackaddr, stacksize);
+
+  /* The kernel does not support it yet.  Leak but at least terminate
+     correctly.  */
+  err = __thread_terminate (kernel_thread);
+
+  /* We are out of luck.  */
   assert_perror (err);
 }
