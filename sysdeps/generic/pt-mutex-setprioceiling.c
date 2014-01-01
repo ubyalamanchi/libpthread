@@ -26,3 +26,5 @@ pthread_mutex_setprioceiling (pthread_mutex_t *mutex, int prio,
 {
   return ENOSYS;
 }
+
+stub_warning (pthread_mutex_setprioceiling)

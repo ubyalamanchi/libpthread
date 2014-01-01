@@ -28,3 +28,4 @@ __pthread_setschedparam (pthread_t thread, int policy,
 }
 
 strong_alias (__pthread_setschedparam, pthread_setschedparam);
+stub_warning (pthread_setschedparam)
