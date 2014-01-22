@@ -98,15 +98,11 @@ __pthread_exit (void *status)
   /* Destroy any signal state.  */
   __pthread_sigstate_destroy (self);
 
-  /* Kernel resources may be used to implement synchronization objects,
-     release them late.  */
-  __pthread_thread_dealloc (self);
-
   /* Self terminating requires TLS, so defer the release of the TCB until
      the thread structure is reused.  */
 
-  /* Terminate the kernel thread, release the stack and drop the
-     self reference.  */
+  /* Release kernel resources, including the kernel thread and the stack,
+     and drop the self reference.  */
   __pthread_thread_terminate (self);
 
   /* NOTREACHED */

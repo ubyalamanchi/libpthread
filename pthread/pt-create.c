@@ -217,7 +217,6 @@ __pthread_create_internal (struct __pthread **thread,
   pthread->tcb = NULL;
  failed_thread_tls_alloc:
 #endif /* ENABLE_TLS */
-  __pthread_thread_dealloc (pthread);
   __pthread_thread_terminate (pthread);
 
   /* __pthread_thread_terminate has taken care of deallocating the stack and

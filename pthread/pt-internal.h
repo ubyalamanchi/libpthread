@@ -245,14 +245,12 @@ extern int __pthread_setup (struct __pthread *__restrict thread,
    resources) for THREAD; it must not be placed on the run queue.  */
 extern int __pthread_thread_alloc (struct __pthread *thread);
 
-/* Deallocate any kernel resources associated with THREAD.  */
-extern void __pthread_thread_dealloc (struct __pthread *thread);
-
 /* Start THREAD making it eligible to run.  */
 extern int __pthread_thread_start (struct __pthread *thread);
 
 /* Terminate the kernel thread associated with THREAD, and deallocate its
-   stack.  In addition, THREAD loses one reference.
+   stack as well as any other kernel resource associated with it.
+   In addition, THREAD looses one reference.
 
    This function can be called by any thread, including the target thread.
    Since some resources that are destroyed along the kernel thread are

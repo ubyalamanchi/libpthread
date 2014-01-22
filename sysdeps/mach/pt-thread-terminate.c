@@ -32,7 +32,7 @@ void
 __pthread_thread_terminate (struct __pthread *thread)
 {
   thread_t kernel_thread, self_ktid;
-  mach_port_t reply_port;
+  mach_port_t wakeup_port, reply_port;
   void *stackaddr;
   size_t stacksize;
   error_t err;
@@ -50,6 +50,8 @@ __pthread_thread_terminate (struct __pthread *thread)
       stacksize = 0;
     }
 
+  wakeup_port = thread->wakeupmsg.msgh_remote_port;
+
   /* Each thread has its own reply port, allocated from MiG stub code calling
      __mig_get_reply_port.  Destroying it is a bit tricky because the calls
      involved are also RPCs, causing the creation of a new reply port if
@@ -63,6 +65,9 @@ __pthread_thread_terminate (struct __pthread *thread)
 
   /* Finally done with the thread structure.  */
   __pthread_dealloc (thread);
+
+  /* The wake up port is now no longer needed.  */
+  __mach_port_destroy (__mach_task_self (), wakeup_port);
 
   /* Terminate and release all that's left.  */
   err = __thread_terminate_release (kernel_thread, mach_task_self (),

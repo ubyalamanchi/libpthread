@@ -119,7 +119,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 									    \
 	pt-stack-alloc							    \
 	pt-thread-alloc							    \
-	pt-thread-dealloc						    \
 	pt-thread-start							    \
 	pt-thread-terminate						    \
 	pt-startup							    \
