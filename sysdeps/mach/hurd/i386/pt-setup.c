@@ -74,24 +74,35 @@ __pthread_setup (struct __pthread *thread,
 		 void (*entry_point)(struct __pthread *, void *(*)(void *), void *),
 		 void *(*start_routine)(void *), void *arg)
 {
+  tcbhead_t *tcb;
   error_t err;
   mach_port_t ktid;
 
   thread->mcontext.pc = entry_point;
   thread->mcontext.sp = stack_setup (thread, start_routine, arg);
 
-  thread->tcb->self = thread->kernel_thread;
-
   ktid = __mach_thread_self ();
-  if (thread->kernel_thread != ktid)
+  if (thread->kernel_thread == ktid)
+    /* Fix up the TCB for the main thread.  The C library has already
+       installed a TCB, which we want to keep using.  This TCB must not
+       be freed so don't register it in the thread structure.  On the
+       other hand, it's not yet possible to reliably release a TCB.
+       Leave the unused one registered so that it doesn't leak.  The
+       only thing left to do is to correctly set the `self' member in
+       the already existing TCB.  */
+    tcb = THREAD_SELF;
+  else
     {
       err = __thread_set_pcsptp (thread->kernel_thread,
 			       1, thread->mcontext.pc,
 			       1, thread->mcontext.sp,
 			       1, thread->tcb);
       assert_perror (err);
+      tcb = thread->tcb;
     }
   __mach_port_deallocate (__mach_task_self (), ktid);
+
+  tcb->self = thread->kernel_thread;
 
   return 0;
 }
