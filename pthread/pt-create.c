@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <signal.h>
+#include <resolv.h>
 
 #include <bits/pt-atomic.h>
 
@@ -45,6 +46,7 @@ entry_point (struct __pthread *self, void *(*start_routine)(void *), void *arg)
 {
 #ifdef ENABLE_TLS
   ___pthread_self = self;
+  __resp = &self->res_state;
 #endif
 
 #ifdef IS_IN_libpthread

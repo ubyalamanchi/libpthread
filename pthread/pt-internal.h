@@ -25,6 +25,8 @@
 #include <sched.h>
 #include <signal.h>
 #include <assert.h>
+#define __need_res_state
+#include <resolv.h>
 
 #include <bits/pt-atomic.h>
 
@@ -106,6 +108,9 @@ struct __pthread
   enum pthread_state state;
   pthread_mutex_t state_lock;	/* Locks the state.  */
   pthread_cond_t state_cond;	/* Signalled when the state changes.  */
+
+  /* Resolver state.  */
+  struct __res_state res_state;
 
   /* Thread context.  */
   struct pthread_mcontext mcontext;

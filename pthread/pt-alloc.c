@@ -68,6 +68,8 @@ initialize_pthread (struct __pthread *new)
 
   new->cancelation_handlers = 0;
 
+  memset (&new->res_state, '\0', sizeof (new->res_state));
+
 #ifdef ENABLE_TLS
   new->tcb = NULL;
 #endif
