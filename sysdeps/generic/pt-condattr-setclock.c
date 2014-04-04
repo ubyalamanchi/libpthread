@@ -35,7 +35,7 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
 	  struct timespec ts;
 	  int res;
 
-	  res = clock_getres (CLOCK_MONOTONIC, &ts);
+	  res = clock_gettime (CLOCK_MONOTONIC, &ts);
 	  avail = res < 0 ? -1 : 1;
 	}
 

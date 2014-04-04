@@ -216,10 +216,8 @@ VPATH += $(SYSDEP_PATH)
 
 ifeq ($(IN_GLIBC),no)
 HURDLIBS = ihash
-LDLIBS = -lrt
 else
 LDLIBS-pthread.so = -lihash
-$(objpfx)libpthread.so: $(common-objpfx)rt/librt.so
 endif
 
 ifeq ($(IN_GLIBC),no)
