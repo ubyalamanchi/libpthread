@@ -44,16 +44,6 @@
      pthread_getschedparam
      pthread_setschedparam
 
-** Alternate stacks
-
-   Supporting alternate stacks (via pthread_attr_getstackaddr,
-   pthread_attr_setstackaddr, pthread_attr_getstack,
-   pthread_attr_setstack, pthread_attr_getstacksize and
-   pthread_attr_setstacksize) is no problem as long as they are of the
-   correct size and have the correct alignment.  This is due to
-   limitations in the Hurd TSD implementation
-   (c.f. <hurd/threadvar.h>).
-
 ** Cancelation
 *** Cancelation points
     The only cancelation points are pthread_join, pthread_cond_wait,
