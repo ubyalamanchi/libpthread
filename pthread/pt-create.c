@@ -118,12 +118,10 @@ __pthread_create_internal (struct __pthread **thread,
     {
       /* Allocate a stack.  */
       err = __pthread_stack_alloc (&pthread->stackaddr,
-				   setup->stacksize);
+				   setup->guardsize + setup->stacksize);
       if (err)
 	goto failed_stack_alloc;
 
-      pthread->guardsize = (setup->guardsize <= setup->stacksize
-			   ? setup->guardsize : setup->stacksize);
       pthread->stack = 1;
     }
 

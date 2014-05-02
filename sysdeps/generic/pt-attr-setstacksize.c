@@ -26,11 +26,5 @@ pthread_attr_setstacksize (pthread_attr_t *attr,
 {
   attr->stacksize = stacksize;
 
-  /* The guard size cannot be larger than the stack itself, as
-     such, if the new stack size is smaller than the guard size,
-     we squash the guard size.  */
-  if (attr->guardsize > attr->stacksize)
-    attr->guardsize = attr->stacksize;
-
   return 0;
 }
