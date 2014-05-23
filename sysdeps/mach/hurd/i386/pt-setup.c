@@ -46,7 +46,9 @@ stack_setup (struct __pthread *thread,
 
   /* Calculate the top of the new stack.  */
   bottom = thread->stackaddr;
-  top = (uintptr_t *) ((uintptr_t) bottom + thread->stacksize);
+  top = (uintptr_t *) ((uintptr_t) bottom + thread->stacksize
+        + ((thread->guardsize + __vm_page_size-1)
+	   / __vm_page_size) * __vm_page_size);
 
   if (start_routine)
     {
