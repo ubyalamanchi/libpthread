@@ -227,7 +227,10 @@ __pthread_create_internal (struct __pthread **thread,
   goto failed;
  failed_thread_alloc:
   if (pthread->stack)
-    __pthread_stack_dealloc (pthread->stackaddr, pthread->stacksize);
+    __pthread_stack_dealloc (pthread->stackaddr,
+			     ((setup->guardsize + __vm_page_size-1)
+			      / __vm_page_size) * __vm_page_size
+			     + pthread->stacksize);
  failed_stack_alloc:
   __pthread_dealloc (pthread);
  failed:
