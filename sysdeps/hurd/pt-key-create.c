@@ -31,7 +31,7 @@ int __pthread_key_count;
 int __pthread_key_invalid_count;
 
 int
-pthread_key_create (pthread_key_t *key, void (*destructor) (void *))
+__pthread_key_create (pthread_key_t *key, void (*destructor) (void *))
 {
   /* Where to look for the next key slot.  */
   static int index;
@@ -107,3 +107,5 @@ pthread_key_create (pthread_key_t *key, void (*destructor) (void *))
   __pthread_mutex_unlock (&__pthread_key_lock);
   return 0;
 }
+strong_alias (__pthread_key_create, pthread_key_create)
+hidden_def (__pthread_key_create)
