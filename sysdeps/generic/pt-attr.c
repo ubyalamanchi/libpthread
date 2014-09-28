@@ -27,7 +27,7 @@
 const struct __pthread_attr __pthread_default_attr =
 {
   schedparam: { sched_priority: 0 },
-  stacksize: PTHREAD_STACK_DEFAULT,
+  stacksize: 0,
   stackaddr: NULL,
 #ifdef PAGESIZE
   guardsize: PAGESIZE,

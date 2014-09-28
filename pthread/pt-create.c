@@ -24,6 +24,7 @@
 #include <resolv.h>
 
 #include <bits/pt-atomic.h>
+#include <hurd/resource.h>
 
 #include <pt-internal.h>
 
@@ -92,6 +93,7 @@ __pthread_create_internal (struct __pthread **thread,
   struct __pthread *pthread;
   const struct __pthread_attr *setup;
   sigset_t sigset;
+  size_t stacksize;
 
   /* Allocate a new thread structure.  */
   err = __pthread_alloc (&pthread);
@@ -100,6 +102,17 @@ __pthread_create_internal (struct __pthread **thread,
 
   /* Use the default attributes if ATTR is NULL.  */
   setup = attr ? attr : &__pthread_default_attr;
+
+  stacksize = setup->stacksize;
+  if (!stacksize)
+    {
+      struct rlimit rlim;
+      getrlimit(RLIMIT_STACK, &rlim);
+      if (rlim.rlim_cur != RLIM_INFINITY)
+	stacksize = rlim.rlim_cur;
+      if (!stacksize)
+	stacksize = PTHREAD_STACK_DEFAULT;
+    }
 
   /* Initialize the thread state.  */
   pthread->state = (setup->detachstate == PTHREAD_CREATE_DETACHED
@@ -120,7 +133,7 @@ __pthread_create_internal (struct __pthread **thread,
       err = __pthread_stack_alloc (&pthread->stackaddr,
 				   ((setup->guardsize + __vm_page_size-1)
 				    / __vm_page_size) * __vm_page_size
-				   + setup->stacksize);
+				   + stacksize);
       if (err)
 	goto failed_stack_alloc;
 
@@ -128,7 +141,7 @@ __pthread_create_internal (struct __pthread **thread,
       pthread->stack = 1;
     }
 
-  pthread->stacksize = setup->stacksize;
+  pthread->stacksize = stacksize;
 
   /* Allocate the kernel thread and other required resources.  */
   err = __pthread_thread_alloc (pthread);
@@ -230,7 +243,7 @@ __pthread_create_internal (struct __pthread **thread,
     __pthread_stack_dealloc (pthread->stackaddr,
 			     ((setup->guardsize + __vm_page_size-1)
 			      / __vm_page_size) * __vm_page_size
-			     + pthread->stacksize);
+			     + stacksize);
  failed_stack_alloc:
   __pthread_dealloc (pthread);
  failed:
