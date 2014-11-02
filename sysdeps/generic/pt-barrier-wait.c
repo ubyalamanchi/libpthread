@@ -33,16 +33,24 @@ pthread_barrier_wait (pthread_barrier_t *barrier)
       if (barrier->count > 1)
 	{
 	  struct __pthread *wakeup;
+	  unsigned n = 0;
 
-	  wakeup = barrier->queue;
-	  barrier->queue = NULL;
-	  __pthread_spin_unlock (&barrier->lock);
+	  __pthread_queue_iterate (barrier->queue, wakeup)
+	    n ++;
 
-	  /* We can safely walk the list of waiting threads without
-	     holding the lock since it is decoupled from the barrier
-	     variable now.  */
-	  __pthread_dequeuing_iterate (wakeup, wakeup)
-	    __pthread_wakeup (wakeup);
+	  {
+	    struct __pthread *wakeups[n];
+	    unsigned i = 0;
+
+	    __pthread_dequeuing_iterate (barrier->queue, wakeup)
+	      wakeups[i ++] = wakeup;
+
+	    barrier->queue = NULL;
+	    __pthread_spin_unlock (&barrier->lock);
+
+	    for (i = 0; i < n; i ++)
+	      __pthread_wakeup (wakeups[i]);
+	  }
 	}
 
       return PTHREAD_BARRIER_SERIAL_THREAD;
