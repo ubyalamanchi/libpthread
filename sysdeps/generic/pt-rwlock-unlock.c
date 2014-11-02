@@ -65,15 +65,26 @@ pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 
   if (rwlock->readerqueue)
     {
-      __pthread_dequeuing_iterate (rwlock->readerqueue, wakeup)
-	{
-	  rwlock->readers ++;
-	  __pthread_wakeup (wakeup);
-	}
+      unsigned n = 0;
 
-      rwlock->readerqueue = 0;
+      __pthread_queue_iterate (rwlock->readerqueue, wakeup)
+        n ++;
 
-      __pthread_spin_unlock (&rwlock->__lock);
+      {
+	struct __pthread *wakeups[n];
+	unsigned i = 0;
+
+	__pthread_dequeuing_iterate (rwlock->readerqueue, wakeup)
+	    wakeups[i ++] = wakeup;
+
+	rwlock->readers += n;
+	rwlock->readerqueue = 0;
+
+	__pthread_spin_unlock (&rwlock->__lock);
+
+	for (i = 0; i < n; i ++)
+	  __pthread_wakeup (wakeups[i]);
+      }
 
       return 0;
     }
