@@ -28,10 +28,15 @@ __pthread_cond_broadcast (pthread_cond_t *cond)
   struct __pthread *wakeup;
 
   __pthread_spin_lock (&cond->__lock);
-  __pthread_dequeuing_iterate (cond->__queue, wakeup)
-    __pthread_wakeup (wakeup);
-
-  cond->__queue = NULL;
+  while ((wakeup = cond->__queue))
+    {
+      __pthread_dequeue (wakeup);
+      __pthread_spin_unlock (&cond->__lock);
+      /* Wake it up without spin held, so it may have a chance to really
+        preempt us */
+      __pthread_wakeup (wakeup);
+      __pthread_spin_lock (&cond->__lock);
+    }
   __pthread_spin_unlock (&cond->__lock);
 
   return 0;
