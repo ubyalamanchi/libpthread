@@ -151,7 +151,10 @@ __pthread_create_internal (struct __pthread **thread,
 #ifdef ENABLE_TLS
   pthread->tcb = _dl_allocate_tls (NULL);
   if (!pthread->tcb)
-    goto failed_thread_tls_alloc;
+    {
+      err = ENOMEM;
+      goto failed_thread_tls_alloc;
+    }
   pthread->tcb->tcb = pthread->tcb;
 #endif /* ENABLE_TLS */
 
