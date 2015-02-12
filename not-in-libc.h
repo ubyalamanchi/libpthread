@@ -6,6 +6,7 @@
 #define __thread_resume		thread_resume
 #define __thread_set_state	thread_set_state
 #define __thread_terminate	thread_terminate
+#define __thread_terminate_release	thread_terminate_release
 #define __vm_allocate		vm_allocate
 #define __vm_deallocate		vm_deallocate
 #define __sched_yield           sched_yield
