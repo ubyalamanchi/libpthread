@@ -69,7 +69,7 @@ static const struct pthread_functions pthread_functions =
 
 /* Initialize the pthreads library.  */
 void
-__pthread_init (void)
+___pthread_init (void)
 {
 #if IS_IN (libpthread)
   __libc_pthread_init(&pthread_functions);
