@@ -30,5 +30,5 @@ __funlockfile (stream)
   __libc_ptf_call (_IO_funlockfile, (stream), 0);
 #endif
 }
-strong_alias (__funlockfile, _IO_funlockfile)
+weak_alias (__funlockfile, _IO_funlockfile)
 weak_alias (__funlockfile, funlockfile)

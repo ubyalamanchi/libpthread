@@ -29,5 +29,5 @@ __flockfile (stream)
   __libc_ptf_call (_IO_flockfile, (stream), 0);
 #endif
 }
-strong_alias (__flockfile, _IO_flockfile)
+weak_alias (__flockfile, _IO_flockfile)
 weak_alias (__flockfile, flockfile)

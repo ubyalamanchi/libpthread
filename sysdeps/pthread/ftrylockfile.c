@@ -32,5 +32,5 @@ __ftrylockfile (stream)
   return 0;
 #endif
 }
-strong_alias (__ftrylockfile, _IO_ftrylockfile)
+weak_alias (__ftrylockfile, _IO_ftrylockfile)
 weak_alias (__ftrylockfile, ftrylockfile)
