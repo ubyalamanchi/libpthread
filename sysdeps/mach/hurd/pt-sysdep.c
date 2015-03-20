@@ -59,7 +59,7 @@ _init_routine (void *stack)
       /* Avoid allocating another stack */
       attrp = &attr;
       pthread_attr_init(attrp);
-      pthread_attr_setstack(attrp, __libc_stack_end, __vm_page_size);
+      pthread_attr_setstack(attrp, stack, __vm_page_size);
     }
 
   /* Create the pthread structure for the main thread (i.e. us).  */
