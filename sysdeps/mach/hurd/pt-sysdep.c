@@ -50,7 +50,7 @@ _init_routine (void *stack)
     return 0;
 
   /* Initialize the library.  */
-  __pthread_init ();
+  ___pthread_init ();
 
   if (stack)
     {
