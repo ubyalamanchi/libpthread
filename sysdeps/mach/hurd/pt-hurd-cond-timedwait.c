@@ -44,7 +44,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
 {
   struct hurd_sigstate *ss = _hurd_self_sigstate ();
   struct __pthread *self = _pthread_self ();
-  error_t err;
+  error_t err = 0;
   int cancel, drain;
   clockid_t clock_id = __pthread_default_condattr.clock;
 
