@@ -23,6 +23,9 @@
 #define __need_schedparam
 #include <bits/sched.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 enum __pthread_detachstate;
 enum __pthread_inheritsched;
 enum __pthread_contentionscope;
