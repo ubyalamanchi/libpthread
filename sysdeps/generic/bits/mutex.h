@@ -41,14 +41,14 @@ struct __pthread_mutex
     __pthread_spinlock_t __lock;
     /* In cthreads, mutex_init does not initialized thre third
        pointer, as such, we cannot rely on its value for anything.  */
-    char *cthreadscompat1;
+    char *__cthreadscompat1;
     struct __pthread *__queue;
-    struct __pthread_mutexattr *attr;
-    void *data;
+    struct __pthread_mutexattr *__attr;
+    void *__data;
     /*  Up to this point, we are completely compatible with cthreads
 	and what libc expects.  */
-    void *owner;
-    unsigned locks;
+    void *__owner;
+    unsigned __locks;
     /* If NULL then the default attributes apply.  */
   };
 

@@ -35,15 +35,15 @@ _pthread_mutex_init (pthread_mutex_t *mutex,
     /* The default attributes.  */
     return 0;
 
-  if (! mutex->attr
-      || mutex->attr == __PTHREAD_ERRORCHECK_MUTEXATTR
-      || mutex->attr == __PTHREAD_RECURSIVE_MUTEXATTR)
-    mutex->attr = malloc (sizeof *attr);
+  if (! mutex->__attr
+      || mutex->__attr == __PTHREAD_ERRORCHECK_MUTEXATTR
+      || mutex->__attr == __PTHREAD_RECURSIVE_MUTEXATTR)
+    mutex->__attr = malloc (sizeof *attr);
 
-  if (! mutex->attr)
+  if (! mutex->__attr)
     return ENOMEM;
 
-  *mutex->attr = *attr;
+  *mutex->__attr = *attr;
   return 0;
 }
 

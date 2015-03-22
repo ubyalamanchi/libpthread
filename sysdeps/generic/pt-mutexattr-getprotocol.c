@@ -24,6 +24,6 @@ int
 pthread_mutexattr_getprotocol (const pthread_mutexattr_t *attr,
 			       int *protocol)
 {
-  *protocol = attr->protocol;
+  *protocol = attr->__protocol;
   return 0;
 }

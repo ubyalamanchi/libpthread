@@ -33,7 +33,7 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
   error_t err;
   int drain;
   struct __pthread *self;
-  const struct __pthread_mutexattr *attr = mutex->attr;
+  const struct __pthread_mutexattr *attr = mutex->__attr;
 
   if (attr == __PTHREAD_ERRORCHECK_MUTEXATTR)
     attr = &__pthread_errorcheck_mutexattr;
@@ -52,22 +52,22 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
 	   initialized, in particular, before the main thread has a
 	   TCB.  */
 	{
-	  assert (! mutex->owner);
-	  mutex->owner = _pthread_self ();
+	  assert (! mutex->__owner);
+	  mutex->__owner = _pthread_self ();
 	}
 #endif
 #endif
 
       if (attr)
-	switch (attr->mutex_type)
+	switch (attr->__mutex_type)
 	  {
 	  case PTHREAD_MUTEX_NORMAL:
 	    break;
 
 	  case PTHREAD_MUTEX_RECURSIVE:
-	    mutex->locks = 1;
+	    mutex->__locks = 1;
 	  case PTHREAD_MUTEX_ERRORCHECK:
-	    mutex->owner = _pthread_self ();
+	    mutex->__owner = _pthread_self ();
 	    break;
 
 	  default:
@@ -83,18 +83,18 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
   self = _pthread_self ();
   assert (self);
 
-  if (! attr || attr->mutex_type == PTHREAD_MUTEX_NORMAL)
+  if (! attr || attr->__mutex_type == PTHREAD_MUTEX_NORMAL)
     {
 #if defined(ALWAYS_TRACK_MUTEX_OWNER)
-      assert (mutex->owner != self);
+      assert (mutex->__owner != self);
 #endif
     }
   else
     {
-      switch (attr->mutex_type)
+      switch (attr->__mutex_type)
 	{
 	case PTHREAD_MUTEX_ERRORCHECK:
-	  if (mutex->owner == self)
+	  if (mutex->__owner == self)
 	    {
 	      __pthread_spin_unlock (&mutex->__lock);
 	      return EDEADLK;
@@ -102,9 +102,9 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
 	  break;
 
 	case PTHREAD_MUTEX_RECURSIVE:
-	  if (mutex->owner == self)
+	  if (mutex->__owner == self)
 	    {
-	      mutex->locks ++;
+	      mutex->__locks ++;
 	      __pthread_spin_unlock (&mutex->__lock);
 	      return 0;
 	    }
@@ -116,9 +116,9 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
     }
 
 #if !defined(ALWAYS_TRACK_MUTEX_OWNER)
-  if (attr && attr->mutex_type != PTHREAD_MUTEX_NORMAL)
+  if (attr && attr->__mutex_type != PTHREAD_MUTEX_NORMAL)
 #endif
-    assert (mutex->owner);
+    assert (mutex->__owner);
 
   if (abstime && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
     return EINVAL;
@@ -162,23 +162,23 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
     }
 
 #if !defined(ALWAYS_TRACK_MUTEX_OWNER)
-  if (attr && attr->mutex_type != PTHREAD_MUTEX_NORMAL)
+  if (attr && attr->__mutex_type != PTHREAD_MUTEX_NORMAL)
 #endif
     {
-      assert (mutex->owner == self);
+      assert (mutex->__owner == self);
     }
 
   if (attr)
-    switch (attr->mutex_type)
+    switch (attr->__mutex_type)
       {
       case PTHREAD_MUTEX_NORMAL:
 	break;
 
       case PTHREAD_MUTEX_RECURSIVE:
-	assert (mutex->locks == 0);
-	mutex->locks = 1;
+	assert (mutex->__locks == 0);
+	mutex->__locks = 1;
       case PTHREAD_MUTEX_ERRORCHECK:
-	mutex->owner = self;
+	mutex->__owner = self;
 	break;
 
       default:

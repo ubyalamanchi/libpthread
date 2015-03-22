@@ -22,24 +22,24 @@
 
 const struct __pthread_mutexattr __pthread_default_mutexattr =
 {
-  prioceiling: 0,
-  protocol: PTHREAD_PRIO_NONE,
-  pshared: PTHREAD_PROCESS_PRIVATE,
-  mutex_type: PTHREAD_MUTEX_DEFAULT
+  __prioceiling: 0,
+  __protocol: PTHREAD_PRIO_NONE,
+  __pshared: PTHREAD_PROCESS_PRIVATE,
+  __mutex_type: PTHREAD_MUTEX_DEFAULT
 };
 
 const struct __pthread_mutexattr __pthread_errorcheck_mutexattr =
 {
-  prioceiling: 0,
-  protocol: PTHREAD_PRIO_NONE,
-  pshared: PTHREAD_PROCESS_PRIVATE,
-  mutex_type: PTHREAD_MUTEX_ERRORCHECK
+  __prioceiling: 0,
+  __protocol: PTHREAD_PRIO_NONE,
+  __pshared: PTHREAD_PROCESS_PRIVATE,
+  __mutex_type: PTHREAD_MUTEX_ERRORCHECK
 };
 
 const struct __pthread_mutexattr __pthread_recursive_mutexattr =
 {
-  prioceiling: 0,
-  protocol: PTHREAD_PRIO_NONE,
-  pshared: PTHREAD_PROCESS_PRIVATE,
-  mutex_type: PTHREAD_MUTEX_RECURSIVE
+  __prioceiling: 0,
+  __protocol: PTHREAD_PRIO_NONE,
+  __pshared: PTHREAD_PROCESS_PRIVATE,
+  __mutex_type: PTHREAD_MUTEX_RECURSIVE
 };

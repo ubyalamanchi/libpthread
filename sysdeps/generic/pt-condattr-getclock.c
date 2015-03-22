@@ -26,6 +26,6 @@ int
 pthread_condattr_getclock (const pthread_condattr_t *attr,
 			   clockid_t *clock)
 {
-  *clock = attr->clock;
+  *clock = attr->__clock;
   return 0;
 }

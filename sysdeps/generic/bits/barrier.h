@@ -25,14 +25,14 @@
 /* This structure describes the attributes of a POSIX barrier.  */
 struct __pthread_barrier
 {
-  __pthread_spinlock_t lock;
-  struct __pthread *queue; /* List of waiters.  */
-  unsigned pending;	/* Number of that still need to wait on
+  __pthread_spinlock_t __lock;
+  struct __pthread *__queue; /* List of waiters.  */
+  unsigned __pending;	/* Number of that still need to wait on
 			   barrier.  */
-  unsigned count;	/* Number of threads that must wait before
+  unsigned __count;	/* Number of threads that must wait before
 			   barrier is passed.  */
-  struct __pthread_barrierattr *attr;
-  void *data;
+  struct __pthread_barrierattr *__attr;
+  void *__data;
 };
 
 

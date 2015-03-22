@@ -33,9 +33,9 @@ pthread_barrier_init (pthread_barrier_t *barrier,
 
   memset (barrier, 0, sizeof *barrier);
 
-  barrier->lock = PTHREAD_SPINLOCK_INITIALIZER;
-  barrier->pending = count;
-  barrier->count = count;
+  barrier->__lock = PTHREAD_SPINLOCK_INITIALIZER;
+  barrier->__pending = count;
+  barrier->__count = count;
 
   if (! attr
       || memcmp (attr, &__pthread_default_barrierattr, sizeof (*attr) == 0))
@@ -44,10 +44,10 @@ pthread_barrier_init (pthread_barrier_t *barrier,
 
   /* Non-default attributes.  */
 
-  barrier->attr = malloc (sizeof *attr);
-  if (! barrier->attr)
+  barrier->__attr = malloc (sizeof *attr);
+  if (! barrier->__attr)
     return ENOMEM;
 
-  *barrier->attr = *attr;
+  *barrier->__attr = *attr;
   return 0;
 }

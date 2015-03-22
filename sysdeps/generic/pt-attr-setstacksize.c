@@ -24,7 +24,7 @@ int
 pthread_attr_setstacksize (pthread_attr_t *attr,
 			   size_t stacksize)
 {
-  attr->stacksize = stacksize;
+  attr->__stacksize = stacksize;
 
   return 0;
 }

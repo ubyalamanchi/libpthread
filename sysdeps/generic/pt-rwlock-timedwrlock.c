@@ -37,9 +37,9 @@ __pthread_rwlock_timedwrlock_internal (struct __pthread_rwlock *rwlock,
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
     /* Successfully acquired the lock.  */
     {
-      assert (rwlock->readerqueue == 0);
-      assert (rwlock->writerqueue == 0);
-      assert (rwlock->readers == 0);
+      assert (rwlock->__readerqueue == 0);
+      assert (rwlock->__writerqueue == 0);
+      assert (rwlock->__readers == 0);
 
       __pthread_spin_unlock (&rwlock->__lock);
       return 0;
@@ -53,7 +53,7 @@ __pthread_rwlock_timedwrlock_internal (struct __pthread_rwlock *rwlock,
   self = _pthread_self ();
 
   /* Add ourselves to the queue.  */
-  __pthread_enqueue (&rwlock->writerqueue, self);
+  __pthread_enqueue (&rwlock->__writerqueue, self);
   __pthread_spin_unlock (&rwlock->__lock);
 
   /* Block the thread.  */
@@ -90,7 +90,7 @@ __pthread_rwlock_timedwrlock_internal (struct __pthread_rwlock *rwlock,
       return err;
     }
 
-  assert (rwlock->readers == 0);
+  assert (rwlock->__readers == 0);
 
   return 0;
 }

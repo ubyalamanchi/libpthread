@@ -26,7 +26,7 @@ enum __pthread_process_shared;
    Note that not all of them are supported on all systems.  */
 struct __pthread_rwlockattr
 {
-  enum __pthread_process_shared pshared;
+  enum __pthread_process_shared __pshared;
 };
 
 #endif /* bits/rwlock-attr.h */

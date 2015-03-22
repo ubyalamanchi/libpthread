@@ -24,8 +24,8 @@
 
 struct __pthread_once
 {
-  int run;
-  __pthread_spinlock_t lock;
+  int __run;
+  __pthread_spinlock_t __lock;
 };
 
 #define __PTHREAD_ONCE_INIT \

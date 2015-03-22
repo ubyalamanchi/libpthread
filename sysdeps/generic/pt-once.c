@@ -25,18 +25,18 @@
 int
 __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 {
-  if (once_control->run == 0)
+  if (once_control->__run == 0)
     {
-      __pthread_spin_lock (&once_control->lock);
+      __pthread_spin_lock (&once_control->__lock);
 
-      if (once_control->run == 0)
+      if (once_control->__run == 0)
 	{
 	  init_routine ();
 	  __memory_barrier ();
-	  once_control->run = 1;
+	  once_control->__run = 1;
 	}
 
-      __pthread_spin_unlock (&once_control->lock);
+      __pthread_spin_unlock (&once_control->__lock);
     }
 
   return 0;

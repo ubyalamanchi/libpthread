@@ -28,7 +28,7 @@ pthread_mutexattr_settype (pthread_mutexattr_t *attr, int type)
     case PTHREAD_MUTEX_NORMAL:
     case PTHREAD_MUTEX_ERRORCHECK:
     case PTHREAD_MUTEX_RECURSIVE:
-      attr->mutex_type = type;
+      attr->__mutex_type = type;
       return 0;
 
     default:

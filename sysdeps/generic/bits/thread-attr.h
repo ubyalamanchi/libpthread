@@ -34,14 +34,14 @@ enum __pthread_contentionscope;
    that not all of them are supported on all systems.  */
 struct __pthread_attr
 {
-  struct __sched_param schedparam;
-  void *stackaddr;
-  size_t stacksize;
-  size_t guardsize;
-  enum __pthread_detachstate detachstate;
-  enum __pthread_inheritsched inheritsched;
-  enum __pthread_contentionscope contentionscope;
-  int schedpolicy;
+  struct __sched_param __schedparam;
+  void *__stackaddr;
+  size_t __stacksize;
+  size_t __guardsize;
+  enum __pthread_detachstate __detachstate;
+  enum __pthread_inheritsched __inheritsched;
+  enum __pthread_contentionscope __contentionscope;
+  int __schedpolicy;
 };
 
 #endif /* bits/thread-attr.h */

@@ -30,9 +30,9 @@ pthread_rwlock_trywrlock (struct __pthread_rwlock *rwlock)
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
     /* Successfully acquired the lock.  */
     {
-      assert (rwlock->readerqueue == 0);
-      assert (rwlock->writerqueue == 0);
-      assert (rwlock->readers == 0);
+      assert (rwlock->__readerqueue == 0);
+      assert (rwlock->__writerqueue == 0);
+      assert (rwlock->__readers == 0);
 
       __pthread_spin_unlock (&rwlock->__lock);
       return 0;

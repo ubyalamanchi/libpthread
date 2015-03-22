@@ -72,7 +72,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 {
   error_t err;
   int cancelled, oldtype, drain;
-  clockid_t clock_id = __pthread_default_condattr.clock;
+  clockid_t clock_id = __pthread_default_condattr.__clock;
 
   if (abstime && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
     return EINVAL;
@@ -110,7 +110,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
       __pthread_spin_lock (&cond->__lock);
       __pthread_enqueue (&cond->__queue, self);
       if (cond->__attr)
-	clock_id = cond->__attr->clock;
+	clock_id = cond->__attr->__clock;
       __pthread_spin_unlock (&cond->__lock);
     }
   __pthread_mutex_unlock (&self->cancel_lock);

@@ -37,21 +37,21 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
     /* Successfully acquired the lock.  */
     {
-      assert (rwlock->readerqueue == 0);
-      assert (rwlock->writerqueue == 0);
-      assert (rwlock->readers == 0);
+      assert (rwlock->__readerqueue == 0);
+      assert (rwlock->__writerqueue == 0);
+      assert (rwlock->__readers == 0);
 
-      rwlock->readers = 1;
+      rwlock->__readers = 1;
       __pthread_spin_unlock (&rwlock->__lock);
       return 0;
     }
   else
     /* Lock is held, but is held by a reader?  */
-    if (rwlock->readers > 0)
+    if (rwlock->__readers > 0)
       /* Just add ourself to number of readers.  */
       {
-	assert (rwlock->readerqueue == 0);
-	rwlock->readers ++;
+	assert (rwlock->__readerqueue == 0);
+	rwlock->__readers ++;
 	__pthread_spin_unlock (&rwlock->__lock);
 	return 0;
       }
@@ -59,7 +59,7 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
   /* The lock is busy.  */
 
   /* Better be blocked by a writer.  */
-  assert (rwlock->readers == 0);
+  assert (rwlock->__readers == 0);
 
   if (abstime && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
     return EINVAL;
@@ -67,7 +67,7 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
   self = _pthread_self ();
 
   /* Add ourself to the queue.  */
-  __pthread_enqueue (&rwlock->readerqueue, self);
+  __pthread_enqueue (&rwlock->__readerqueue, self);
   __pthread_spin_unlock (&rwlock->__lock);
 
   /* Block the thread.  */
@@ -107,7 +107,7 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
   /* The reader count has already been increment by whoever woke us
      up.  */
 
-  assert (rwlock->readers > 0);
+  assert (rwlock->__readers > 0);
 
   return 0;
 }

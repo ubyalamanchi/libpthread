@@ -46,7 +46,7 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
   else if (clock != CLOCK_REALTIME)
     return EINVAL;
 
-  attr->clock = clock;
+  attr->__clock = clock;
 
   return 0;
 }

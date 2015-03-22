@@ -24,6 +24,6 @@ int
 pthread_attr_setstackaddr (pthread_attr_t *attr,
 			   void *stackaddr)
 {
-  attr->stackaddr = stackaddr;
+  attr->__stackaddr = stackaddr;
   return 0;
 }

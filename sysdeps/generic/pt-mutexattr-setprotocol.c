@@ -24,9 +24,9 @@ int
 pthread_mutexattr_setprotocol (pthread_mutexattr_t *attr,
 			       int protocol)
 {
-  if (protocol == __pthread_default_mutexattr.protocol)
+  if (protocol == __pthread_default_mutexattr.__protocol)
     {
-      attr->protocol = protocol;
+      attr->__protocol = protocol;
       return 0;
     }
 

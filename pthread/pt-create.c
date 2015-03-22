@@ -103,7 +103,7 @@ __pthread_create_internal (struct __pthread **thread,
   /* Use the default attributes if ATTR is NULL.  */
   setup = attr ? attr : &__pthread_default_attr;
 
-  stacksize = setup->stacksize;
+  stacksize = setup->__stacksize;
   if (!stacksize)
     {
       struct rlimit rlim;
@@ -115,12 +115,12 @@ __pthread_create_internal (struct __pthread **thread,
     }
 
   /* Initialize the thread state.  */
-  pthread->state = (setup->detachstate == PTHREAD_CREATE_DETACHED
+  pthread->state = (setup->__detachstate == PTHREAD_CREATE_DETACHED
 		    ? PTHREAD_DETACHED : PTHREAD_JOINABLE);
 
-  if (setup->stackaddr)
+  if (setup->__stackaddr)
     {
-      pthread->stackaddr = setup->stackaddr;
+      pthread->stackaddr = setup->__stackaddr;
 
       /* If the user supplied a stack, it is not our responsibility to
 	 setup a stack guard.  */
@@ -131,13 +131,13 @@ __pthread_create_internal (struct __pthread **thread,
     {
       /* Allocate a stack.  */
       err = __pthread_stack_alloc (&pthread->stackaddr,
-				   ((setup->guardsize + __vm_page_size-1)
+				   ((setup->__guardsize + __vm_page_size-1)
 				    / __vm_page_size) * __vm_page_size
 				   + stacksize);
       if (err)
 	goto failed_stack_alloc;
 
-      pthread->guardsize = setup->guardsize;
+      pthread->guardsize = setup->__guardsize;
       pthread->stack = 1;
     }
 
@@ -244,7 +244,7 @@ __pthread_create_internal (struct __pthread **thread,
  failed_thread_alloc:
   if (pthread->stack)
     __pthread_stack_dealloc (pthread->stackaddr,
-			     ((setup->guardsize + __vm_page_size-1)
+			     ((setup->__guardsize + __vm_page_size-1)
 			      / __vm_page_size) * __vm_page_size
 			     + stacksize);
  failed_stack_alloc:

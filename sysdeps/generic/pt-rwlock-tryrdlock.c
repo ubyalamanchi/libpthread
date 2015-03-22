@@ -30,20 +30,20 @@ pthread_rwlock_tryrdlock (struct __pthread_rwlock *rwlock)
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
     /* Successfully acquired the lock.  */
     {
-      assert (rwlock->readerqueue == 0);
-      assert (rwlock->writerqueue == 0);
-      assert (rwlock->readers == 0);
+      assert (rwlock->__readerqueue == 0);
+      assert (rwlock->__writerqueue == 0);
+      assert (rwlock->__readers == 0);
 
-      rwlock->readers = 1;
+      rwlock->__readers = 1;
       __pthread_spin_unlock (&rwlock->__lock);
       return 0;
     }
   else
     /* Lock is held, but is held by a reader?  */
-    if (rwlock->readers > 0)
+    if (rwlock->__readers > 0)
       {
-	assert (rwlock->readerqueue == 0);
-	rwlock->readers ++;
+	assert (rwlock->__readerqueue == 0);
+	rwlock->__readers ++;
 	__pthread_spin_unlock (&rwlock->__lock);
 	return 0;
       }

@@ -28,10 +28,10 @@ enum __pthread_mutex_type;
    attribute.  */
 struct __pthread_mutexattr
 {
-  int prioceiling;
-  enum __pthread_mutex_protocol protocol;
-  enum __pthread_process_shared pshared;
-  enum __pthread_mutex_type mutex_type;
+  int __prioceiling;
+  enum __pthread_mutex_protocol __protocol;
+  enum __pthread_process_shared __pshared;
+  enum __pthread_mutex_type __mutex_type;
 };
 
 /* Attributes for a recursive mutex.  */

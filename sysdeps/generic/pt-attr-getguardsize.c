@@ -24,6 +24,6 @@ int
 pthread_attr_getguardsize (const pthread_attr_t *attr,
 			   size_t *guardsize)
 {
-  *guardsize = attr->guardsize;
+  *guardsize = attr->__guardsize;
   return 0;
 }

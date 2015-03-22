@@ -26,16 +26,16 @@
 
 const struct __pthread_attr __pthread_default_attr =
 {
-  schedparam: { sched_priority: 0 },
-  stacksize: 0,
-  stackaddr: NULL,
+  __schedparam: { sched_priority: 0 },
+  __stacksize: 0,
+  __stackaddr: NULL,
 #ifdef PAGESIZE
-  guardsize: PAGESIZE,
+  __guardsize: PAGESIZE,
 #else
-  guardsize: 1,
+  __guardsize: 1,
 #endif /* PAGESIZE */
-  detachstate: PTHREAD_CREATE_JOINABLE,
-  inheritsched: PTHREAD_EXPLICIT_SCHED,
-  contentionscope: PTHREAD_SCOPE_SYSTEM,
-  schedpolicy: SCHED_OTHER
+  __detachstate: PTHREAD_CREATE_JOINABLE,
+  __inheritsched: PTHREAD_EXPLICIT_SCHED,
+  __contentionscope: PTHREAD_SCOPE_SYSTEM,
+  __schedpolicy: SCHED_OTHER
 };

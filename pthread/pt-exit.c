@@ -43,8 +43,8 @@ __pthread_exit (void *status)
 
   for (handlers = __pthread_get_cleanup_stack ();
        *handlers;
-       *handlers = (*handlers)->next)
-    (*handlers)->handler ((*handlers)->arg);
+       *handlers = (*handlers)->__next)
+    (*handlers)->__handler ((*handlers)->__arg);
 
   pthread_setcancelstate (oldstate, &oldstate);
 

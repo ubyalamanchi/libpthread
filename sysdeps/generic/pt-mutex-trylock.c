@@ -29,7 +29,7 @@ __pthread_mutex_trylock (struct __pthread_mutex *mutex)
 {
   int err;
   struct __pthread *self;
-  const struct __pthread_mutexattr *attr = mutex->attr;
+  const struct __pthread_mutexattr *attr = mutex->__attr;
 
   if (attr == __PTHREAD_ERRORCHECK_MUTEXATTR)
     attr = &__pthread_errorcheck_mutexattr;
@@ -48,22 +48,22 @@ __pthread_mutex_trylock (struct __pthread_mutex *mutex)
 	   initialized, in particular, before the main thread has a
 	   TCB.  */
 	{
-	  assert (! mutex->owner);
-	  mutex->owner = _pthread_self ();
+	  assert (! mutex->__owner);
+	  mutex->__owner = _pthread_self ();
 	}
 #endif
 #endif
 
       if (attr)
-	switch (attr->mutex_type)
+	switch (attr->__mutex_type)
 	  {
 	  case PTHREAD_MUTEX_NORMAL:
 	    break;
 
 	  case PTHREAD_MUTEX_RECURSIVE:
-	    mutex->locks = 1;
+	    mutex->__locks = 1;
 	  case PTHREAD_MUTEX_ERRORCHECK:
-	    mutex->owner = _pthread_self ();
+	    mutex->__owner = _pthread_self ();
 	    break;
 
 	  default:
@@ -79,7 +79,7 @@ __pthread_mutex_trylock (struct __pthread_mutex *mutex)
   if (attr)
     {
       self = _pthread_self ();
-      switch (attr->mutex_type)
+      switch (attr->__mutex_type)
 	{
 	case PTHREAD_MUTEX_NORMAL:
 	  break;
@@ -91,9 +91,9 @@ __pthread_mutex_trylock (struct __pthread_mutex *mutex)
 	  break;
 
 	case PTHREAD_MUTEX_RECURSIVE:
-	  if (mutex->owner == self)
+	  if (mutex->__owner == self)
 	    {
-	      mutex->locks ++;
+	      mutex->__locks ++;
 	      err = 0;
 	    }
 	  break;

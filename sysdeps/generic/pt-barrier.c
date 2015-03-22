@@ -22,5 +22,5 @@
 
 const struct __pthread_barrierattr __pthread_default_barrierattr =
 {
-  pshared: PTHREAD_PROCESS_PRIVATE
+  __pshared: PTHREAD_PROCESS_PRIVATE
 };

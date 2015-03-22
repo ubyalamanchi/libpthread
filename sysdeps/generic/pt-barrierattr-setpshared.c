@@ -27,7 +27,7 @@ pthread_barrierattr_setpshared (pthread_barrierattr_t *attr,
   switch (pshared)
     {
     case PTHREAD_PROCESS_PRIVATE:
-      attr->pshared = pshared;
+      attr->__pshared = pshared;
       return 0;
 
     case PTHREAD_PROCESS_SHARED:

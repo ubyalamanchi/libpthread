@@ -24,6 +24,6 @@ int
 pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *attr,
 			       int *pshared)
 {
-  *pshared = attr->pshared;
+  *pshared = attr->__pshared;
   return 0;
 }

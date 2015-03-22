@@ -33,25 +33,25 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 
   assert (__pthread_spin_trylock (&rwlock->__held) == EBUSY);
 
-  if (rwlock->readers > 1)
+  if (rwlock->__readers > 1)
     /* There are other readers.  */
     {
-      rwlock->readers --;
+      rwlock->__readers --;
       __pthread_spin_unlock (&rwlock->__lock);
       return 0;
     }
 
-  if (rwlock->readers == 1)
+  if (rwlock->__readers == 1)
     /* Last reader.  */
-    rwlock->readers = 0;
+    rwlock->__readers = 0;
       
 
   /* Wake someone else up.  Try the writer queue first, then the
      reader queue if that is empty.  */
 
-  if (rwlock->writerqueue)
+  if (rwlock->__writerqueue)
     {
-      wakeup = rwlock->writerqueue;
+      wakeup = rwlock->__writerqueue;
       __pthread_dequeue (wakeup);
 
       /* We do not unlock RWLOCK->held: we are transferring the ownership
@@ -63,22 +63,22 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
       return 0;
     }
 
-  if (rwlock->readerqueue)
+  if (rwlock->__readerqueue)
     {
       unsigned n = 0;
 
-      __pthread_queue_iterate (rwlock->readerqueue, wakeup)
+      __pthread_queue_iterate (rwlock->__readerqueue, wakeup)
         n ++;
 
       {
 	struct __pthread *wakeups[n];
 	unsigned i = 0;
 
-	__pthread_dequeuing_iterate (rwlock->readerqueue, wakeup)
+	__pthread_dequeuing_iterate (rwlock->__readerqueue, wakeup)
 	    wakeups[i ++] = wakeup;
 
-	rwlock->readers += n;
-	rwlock->readerqueue = 0;
+	rwlock->__readers += n;
+	rwlock->__readerqueue = 0;
 
 	__pthread_spin_unlock (&rwlock->__lock);
 

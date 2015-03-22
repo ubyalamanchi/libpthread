@@ -24,7 +24,7 @@ int
 __pthread_attr_getscope (const pthread_attr_t *attr,
 		       int *contentionscope)
 {
-  *contentionscope = attr->contentionscope;
+  *contentionscope = attr->__contentionscope;
   return 0;
 }
 

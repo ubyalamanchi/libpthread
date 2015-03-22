@@ -26,10 +26,10 @@
 int
 __pthread_mutex_transfer_np (struct __pthread_mutex *mutex, pthread_t tid)
 {
-  assert (mutex->owner == _pthread_self ());
+  assert (mutex->__owner == _pthread_self ());
 
   struct __pthread *thread = __pthread_getid (tid);
-  const struct __pthread_mutexattr *attr = mutex->attr;
+  const struct __pthread_mutexattr *attr = mutex->__attr;
 
   if (! thread)
     return ESRCH;
@@ -42,21 +42,21 @@ __pthread_mutex_transfer_np (struct __pthread_mutex *mutex, pthread_t tid)
   if (attr == __PTHREAD_RECURSIVE_MUTEXATTR)
     attr = &__pthread_recursive_mutexattr;
 
-  if (attr && attr->mutex_type == PTHREAD_MUTEX_ERRORCHECK)
+  if (attr && attr->__mutex_type == PTHREAD_MUTEX_ERRORCHECK)
     {
 
-      if (mutex->owner != _pthread_self ())
+      if (mutex->__owner != _pthread_self ())
 	return EPERM;
 
-      mutex->owner = thread;
+      mutex->__owner = thread;
     }
 
 #ifndef NDEBUG
 # if !defined(ALWAYS_TRACK_MUTEX_OWNER)
-  if (attr && attr->mutex_type != PTHREAD_MUTEX_NORMAL)
+  if (attr && attr->__mutex_type != PTHREAD_MUTEX_NORMAL)
 # endif
     {
-      mutex->owner = thread;
+      mutex->__owner = thread;
     }
 #endif
 

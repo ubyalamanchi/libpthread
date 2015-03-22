@@ -28,7 +28,7 @@ __pthread_attr_setinheritsched (pthread_attr_t *attr,
     {
     case PTHREAD_INHERIT_SCHED:
     case PTHREAD_EXPLICIT_SCHED:
-      attr->inheritsched = inheritsched;
+      attr->__inheritsched = inheritsched;
       break;
     default:
       return EINVAL;

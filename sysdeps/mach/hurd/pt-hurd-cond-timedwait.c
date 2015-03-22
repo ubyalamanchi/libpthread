@@ -46,7 +46,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
   struct __pthread *self = _pthread_self ();
   error_t err = 0;
   int cancel, drain;
-  clockid_t clock_id = __pthread_default_condattr.clock;
+  clockid_t clock_id = __pthread_default_condattr.__clock;
 
   /* This function will be called by hurd_thread_cancel while we are blocked
      We wake up our thread if it's still blocking or about to block, so it will
@@ -91,7 +91,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
          us up.  */
       __pthread_enqueue (&cond->__queue, self);
       if (cond->__attr)
-	clock_id = cond->__attr->clock;
+	clock_id = cond->__attr->__clock;
       /* Tell hurd_thread_cancel how to unblock us.  */
       ss->cancel_hook = &cancel_me;
     }

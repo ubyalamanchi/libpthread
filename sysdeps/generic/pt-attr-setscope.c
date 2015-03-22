@@ -24,9 +24,9 @@ int
 __pthread_attr_setscope (pthread_attr_t *attr,
 		       int contentionscope)
 {
-  if (contentionscope == __pthread_default_attr.contentionscope)
+  if (contentionscope == __pthread_default_attr.__contentionscope)
     {
-      attr->contentionscope = contentionscope;
+      attr->__contentionscope = contentionscope;
       return 0;
     }
 

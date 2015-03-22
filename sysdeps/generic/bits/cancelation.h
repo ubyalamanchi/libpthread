@@ -22,9 +22,9 @@
 
 struct __pthread_cancelation_handler
 {
-  void (*handler)(void *);
-  void *arg;
-  struct __pthread_cancelation_handler *next;
+  void (*__handler)(void *);
+  void *__arg;
+  struct __pthread_cancelation_handler *__next;
 };
 
 /* Returns the thread local location of the cleanup handler stack.  */
@@ -44,8 +44,8 @@ struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
 	  
 #define __pthread_cleanup_pop(execute) \
 	  if (execute) \
-	    __handler.handler (__handler.arg); \
-	  *__handlers = __handler.next; \
+	    __handler.__handler (__handler.__arg); \
+	  *__handlers = __handler.__next; \
 	}
 
 #endif /* _BITS_CANCELATION_H */

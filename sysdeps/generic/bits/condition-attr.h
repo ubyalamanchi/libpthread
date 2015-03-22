@@ -27,8 +27,8 @@ enum __pthread_process_shared;
 /* User visible part of a condition attribute variable.  */
 struct __pthread_condattr
   {
-    enum __pthread_process_shared pshared;
-    __clockid_t clock;
+    enum __pthread_process_shared __pshared;
+    __clockid_t __clock;
   };
 
 #endif /* bits/condition.h */

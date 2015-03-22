@@ -27,7 +27,7 @@ __pthread_attr_setschedpolicy (pthread_attr_t *attr,
   switch (policy)
     {
     case SCHED_OTHER:
-      attr->schedpolicy = policy;
+      attr->__schedpolicy = policy;
       break;
 
     case SCHED_FIFO:
