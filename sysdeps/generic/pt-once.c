@@ -25,6 +25,7 @@
 int
 __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 {
+  __memory_barrier ();
   if (once_control->__run == 0)
     {
       __pthread_spin_lock (&once_control->__lock);
