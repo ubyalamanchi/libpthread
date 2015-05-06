@@ -149,8 +149,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	sem-post sem-timedwait sem-trywait sem-unlink			    \
 	sem-wait							    \
 									    \
-	shm-directory							    \
-									    \
 	cthreads-compat							    \
 	$(SYSDEPS)
 
