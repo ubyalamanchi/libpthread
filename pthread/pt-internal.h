@@ -60,7 +60,7 @@ enum pthread_state
 # define PTHREAD_SYSDEP_MEMBERS
 #endif
 
-#if !(IS_IN (libpthread))
+#ifndef IS_IN_libpthread
 #ifdef ENABLE_TLS
 /* Type of the TCB.  */
 typedef struct
@@ -70,7 +70,7 @@ typedef struct
   thread_t self;		/* This thread's control port.  */
 } tcbhead_t;
 #endif /* ENABLE_TLS */
-#endif /* ! IS_IN (libpthread) */
+#endif /* IS_IN_libpthread */
 
 /* This structure describes a POSIX thread.  */
 struct __pthread

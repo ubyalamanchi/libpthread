@@ -28,7 +28,7 @@
 
 #include <pt-internal.h>
 
-#if IS_IN (libpthread)
+#ifdef IS_IN_libpthread
 # include <ctype.h>
 #endif
 #ifdef HAVE_USELOCALE
@@ -50,7 +50,7 @@ entry_point (struct __pthread *self, void *(*start_routine)(void *), void *arg)
   __resp = &self->res_state;
 #endif
 
-#if IS_IN (libpthread)
+#ifdef IS_IN_libpthread
   /* Initialize pointers to locale data.  */
   __ctype_init ();
 #endif
