@@ -136,4 +136,7 @@ libpthread {
     pthread_hurd_cond_wait_np;
     pthread_hurd_cond_timedwait_np;
   }
+  GLIBC_PRIVATE {
+    __shm_directory;
+  }
 }
