@@ -35,7 +35,7 @@
 #include <pt-sysdep.h>
 #include <pt-machdep.h>
 
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 # include <ldsodefs.h>
 #endif
 
