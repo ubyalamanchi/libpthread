@@ -28,7 +28,7 @@
 
 DEFINE_HOOK (__pthread_init, (void));
 
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions =
   {
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
@@ -75,13 +75,13 @@ static const struct pthread_functions pthread_functions =
     .ptr__IO_funlockfile = _cthreads_funlockfile,
     .ptr__IO_ftrylockfile = _cthreads_ftrylockfile,
   };
-#endif /* IS_IN_libpthread */
+#endif /* IS_IN (libpthread) */
 
 /* Initialize the pthreads library.  */
 void
 ___pthread_init (void)
 {
-#ifdef IS_IN_libpthread
+#if IS_IN (libpthread)
   __libc_pthread_init(&pthread_functions);
 #endif
   RUN_HOOK (__pthread_init, ());
