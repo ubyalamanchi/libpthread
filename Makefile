@@ -196,7 +196,7 @@ vpath %.c
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
-install-lib-ldscripts := libpthread.so
+install-lib := libpthread.so
 
 include ../Makeconfig
 endif
@@ -273,10 +273,6 @@ $(inst_libdir)/libpthread2_pic.a: $(inst_libdir)/libpthread_pic.a
 	$(INSTALL_DATA) $(srcdir)/libpthread_pic.a $<
 
 ifeq ($(IN_GLIBC),yes)
-$(inst_libdir)/libpthread.so: $(objpfx)libpthread.so$(libpthread.so-version) \
-			      $(+force)
-	ln -sf $(slibdir)/libpthread.so$(libpthread.so-version) $@
-
 libc-link.so = $(common-objpfx)libc.so
 
 extra-B-pthread.so = -B$(common-objpfx)libpthread/
