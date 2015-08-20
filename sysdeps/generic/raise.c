@@ -18,7 +18,7 @@
    License along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "sig-internal.h"
+#include <pthread.h>
 
 int
 raise (int signo)
