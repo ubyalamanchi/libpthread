@@ -27,9 +27,7 @@ raise (int signo)
      "the effect of the raise() function shall be equivalent to
      calling: pthread_kill(pthread_self(), sig);"  */
 
-debug (0, "");
   int err = pthread_kill (pthread_self (), signo);
-debug (0, "");
   if (err)
     {
       errno = err;
