@@ -21,6 +21,7 @@
 #include <pthread.h>
 
 #pragma weak pthread_kill
+#pragma weak pthread_self
 int
 raise (int signo)
 {
