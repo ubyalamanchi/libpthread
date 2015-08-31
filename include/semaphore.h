@@ -20,6 +20,11 @@
 #define _SEMAPHORE_H	1
 
 #include <features.h>
+#include <sys/types.h>
+#ifdef __USE_XOPEN2K
+# define __need_timespec
+# include <time.h>
+#endif
 
 __BEGIN_DECLS
 
