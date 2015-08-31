@@ -26,48 +26,55 @@
 # include <time.h>
 #endif
 
-__BEGIN_DECLS
-
+/* Get the definition for struct __semaphore.  */
 #include <bits/semaphore.h>
+
+
+__BEGIN_DECLS
 
 #define SEM_FAILED ((void *) 0)
 
 typedef struct __semaphore sem_t;
 
 /* Initialize semaphore *SEM with value VALUE.  */
-extern int sem_init (sem_t *sem, int pshared, unsigned value);
-
+extern int sem_init (sem_t *__sem, int __pshared, unsigned int __value)
+     __THROW;
 /* Destroy semaphore *SEM created with sem_init.  */
-extern int sem_destroy (sem_t *sem);
+extern int sem_destroy (sem_t *__sem) __THROW;
 
-/* Store the value of semaphore *SEM in *VALUE.  */
-extern int sem_getvalue (sem_t *__restrict sem, int *__restrict value);
+/* Open a named semaphore.  */
+extern sem_t *sem_open (const char *__name, int __oflag, ...) __THROW;
 
-/* Perform a down operation on semaphore *SEM.  */
-extern int sem_wait (sem_t *sem);
+/* Close a semaphore returned by sem_open.  */
+extern int sem_close (sem_t *__sem) __THROW;
 
-/* Perform a down operation on semaphore *SEM if it can be done so
-   without blocking.  */
-extern int sem_trywait (sem_t *sem);
+/* Unlink a named semaphore.  */
+extern int sem_unlink (const char *__name) __THROW;
+
+/* Perform a down operation on semaphore *SEM.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sem_wait (sem_t *__sem);
 
 #ifdef __USE_XOPEN2K
 /* Perform a down operation on semaphore *SEM but don't wait longer
    than TIMEOUT.  */
-extern int sem_timedwait (sem_t *__restrict sem,
-			  const struct timespec *__restrict timeout);
+extern int sem_timedwait (sem_t *__restrict __sem,
+			  const struct timespec *__restrict __abstime);
 #endif
 
+/* Perform a down operation on semaphore *SEM if it can be done so
+   without blocking.  */
+extern int sem_trywait (sem_t *__sem) __THROWNL;
+
 /* Perform an up operation on semaphore *SEM.  */
-extern int sem_post (sem_t *sem);
+extern int sem_post (sem_t *__sem) __THROWNL;
 
-/* Open a named semaphore.  */
-extern sem_t *sem_open (const char *name, int open_flags, ...);
+/* Store the value of semaphore *SEM in *VALUE.  */
+extern int sem_getvalue (sem_t *__restrict __sem, int *__restrict __sval)
+    __THROW;
 
-/* Close a semaphore returned by sem_open.  */
-extern int sem_close (sem_t *sem);
-
-/* Unlink a named semaphore.  */
-extern int sem_unlink (const char *name);
 
 __END_DECLS
 
