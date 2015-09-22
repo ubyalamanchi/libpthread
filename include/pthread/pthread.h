@@ -197,7 +197,7 @@ extern int pthread_create (pthread_t *__restrict __threadp,
 
 /* Terminate the current thread and make STATUS available to any
    thread that might join us.  */
-extern void pthread_exit (void *__status) __attribute__ ((noreturn));
+extern void pthread_exit (void *__status) __attribute__ ((__noreturn__));
 
 /* Make calling thread wait for termination of thread THREAD.  Return
    the exit status of the thread in *STATUS.  */
