@@ -358,7 +358,7 @@ extern int pthread_mutex_getprioceiling (const pthread_mutex_t *__restrict __mut
    and return the old priority ceiling in *OLDPRIO.  Before returning,
    release the mutex.  */
 extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
-					 int prio, int *__restrict __oldprio);
+					 int __prio, int *__restrict __oldprio);
 #endif
 
 
