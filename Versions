@@ -44,7 +44,6 @@ libpthread {
     cthread_fork;
     cthread_keycreate;
     cthread_getspecific;
-    __libc_getspecific;
     cthread_setspecific;
     __mutex_lock_solid;
     __mutex_unlock_solid;
