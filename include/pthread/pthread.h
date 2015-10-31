@@ -184,7 +184,7 @@ extern int pthread_attr_setstacksize (pthread_attr_t *__attr,
 /* Initialize thread attribute *ATTR with attributes corresponding to the
    already running thread THREAD.  It shall be called on an uninitialized ATTR
    and destroyed with pthread_attr_destroy when no longer needed.  */
-extern int pthread_getattr_np (pthread_t __thread, pthread_attr_t *__attr);
+extern int pthread_getattr_np (pthread_t __thr, pthread_attr_t *__attr);
 #endif
 
 
@@ -598,7 +598,7 @@ extern int pthread_setcanceltype (int __type, int *__oldtype);
 #define PTHREAD_CANCELED ((void *) -1)
 
 /* Cancel THEAD.  */
-extern int pthread_cancel (pthread_t __thread);
+extern int pthread_cancel (pthread_t __thr);
 
 /* Add an explicit cancelation point.  */
 extern void pthread_testcancel (void);
@@ -712,29 +712,29 @@ extern int pthread_atfork (void (*__prepare) (void), void (*__parent) (void),
 /* Signals (should be in <signal.h>).  */
 
 /* Send signal SIGNO to thread THREAD.  */
-extern int pthread_kill (pthread_t __thread, int __signo);
+extern int pthread_kill (pthread_t __thr, int __signo);
 
 
 /* Time.  */
 
 #ifdef __USE_XOPEN2K
 /* Return the thread cpu clock.  */
-extern int pthread_getcpuclockid (pthread_t __thread, __clockid_t *__clock);
+extern int pthread_getcpuclockid (pthread_t __thr, __clockid_t *__clock);
 #endif
 
 
 /* Scheduling.  */
 
 /* Return thread THREAD's scheduling paramters.  */
-extern int pthread_getschedparam (pthread_t __thread, int *__restrict __policy,
+extern int pthread_getschedparam (pthread_t __thr, int *__restrict __policy,
 				  struct sched_param *__restrict __param);
 
 /* Set thread THREAD's scheduling paramters.  */
-extern int pthread_setschedparam (pthread_t __thread, int __policy,
+extern int pthread_setschedparam (pthread_t __thr, int __policy,
 				  const struct sched_param *__param);
 
 /* Set thread THREAD's scheduling priority.  */
-extern int pthread_setschedprio (pthread_t __thread, int __prio);
+extern int pthread_setschedprio (pthread_t __thr, int __prio);
 
 #ifdef __USE_GNU
 /* Yield the processor to another thread or process.
