@@ -16,6 +16,7 @@ libc {
     pthread_mutex_lock; pthread_mutex_trylock; pthread_mutex_unlock;
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     __pthread_get_cleanup_stack;
+  }
   GLIBC_PRIVATE {
     __libc_pthread_init;
     __register_atfork;
