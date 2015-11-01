@@ -70,12 +70,6 @@ cthread_getspecific (cthread_key_t key, void **val)
   return 0;
 }
 
-void *
-__libc_getspecific (cthread_key_t key)
-{
-  return pthread_getspecific (key);
-}
-
 int
 cthread_setspecific (cthread_key_t key, void *val)
 {

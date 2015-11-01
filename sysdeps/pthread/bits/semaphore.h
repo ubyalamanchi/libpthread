@@ -24,7 +24,8 @@
 #error Never include <bits/semaphore.h> directly.
 #endif
 
-#include <pthread.h>
+#include <bits/spin-lock.h>
+#include <bits/pthread.h>
 
 /* User visible part of a semaphore.  */
 struct __semaphore
