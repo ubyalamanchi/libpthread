@@ -46,3 +46,5 @@ raise (int signo)
     return __kill (__getpid (), signo);
 }
 
+libc_hidden_def (raise)
+weak_alias (raise, gsignal)
