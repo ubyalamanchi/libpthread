@@ -229,12 +229,12 @@ extern int pthread_detach (pthread_t __threadp);
 
 /* Compare thread IDs T1 and T2.  Return nonzero if they are equal, 0
    if they are not.  */
-extern int pthread_equal (pthread_t __t1, pthread_t __t2) __THROW;
+extern int pthread_equal (pthread_t __t1, pthread_t __t2);
 
 # ifdef __USE_EXTERN_INLINES
 
 __extern_inline int
-pthread_equal (pthread_t __t1, pthread_t __t2) __THROW
+pthread_equal (pthread_t __t1, pthread_t __t2)
 {
   return __pthread_equal (__t1, __t2);
 }
@@ -490,57 +490,57 @@ extern int pthread_cond_timedwait (pthread_cond_t *__restrict __cond,
 
 /* Destroy the spin lock object LOCK.  */
 extern int pthread_spin_destroy (pthread_spinlock_t *__lock)
-	__THROW __nonnull ((1));
+	__nonnull ((1));
 
 /* Initialize the spin lock object LOCK.  PSHARED determines whether
    the spin lock can be operated upon by multiple processes.  */
 extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
-	__THROW __nonnull ((1));
+	__nonnull ((1));
 
 /* Lock the spin lock object LOCK.  If the lock is held by another
    thread spin until it becomes available.  */
 extern int pthread_spin_lock (pthread_spinlock_t *__lock)
-	__THROWNL __nonnull ((1));
+	__nonnull ((1));
 
 /* Lock the spin lock object LOCK.  Fail if the lock is held by
    another thread.  */
 extern int pthread_spin_trylock (pthread_spinlock_t *__lock)
-	__THROWNL __nonnull ((1));
+	__nonnull ((1));
 
 /* Unlock the spin lock object LOCK.  */
 extern int pthread_spin_unlock (pthread_spinlock_t *__lock)
-	__THROWNL __nonnull ((1));
+	__nonnull ((1));
 
 # ifdef __USE_EXTERN_INLINES
 
 # include <bits/spin-lock-inline.h>
 
 __extern_inline int
-pthread_spin_destroy (pthread_spinlock_t *__lock) __THROW
+pthread_spin_destroy (pthread_spinlock_t *__lock)
 {
   return __pthread_spin_destroy (__lock);
 }
 
 __extern_inline int
-pthread_spin_init (pthread_spinlock_t *__lock, int __pshared) __THROW
+pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
 {
   return __pthread_spin_init (__lock, __pshared);
 }
 
 __extern_inline int
-pthread_spin_lock (pthread_spinlock_t *__lock) __THROWNL
+pthread_spin_lock (pthread_spinlock_t *__lock)
 {
   return __pthread_spin_lock (__lock);
 }
 
 __extern_inline int
-pthread_spin_trylock (pthread_spinlock_t *__lock) __THROWNL
+pthread_spin_trylock (pthread_spinlock_t *__lock)
 {
   return __pthread_spin_trylock (__lock);
 }
 
 __extern_inline int
-pthread_spin_unlock (pthread_spinlock_t *__lock) __THROWNL
+pthread_spin_unlock (pthread_spinlock_t *__lock)
 {
   return __pthread_spin_unlock (__lock);
 }
