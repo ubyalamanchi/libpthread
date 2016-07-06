@@ -17,9 +17,11 @@ libc {
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     __pthread_get_cleanup_stack;
   }
+  GLIBC_2.24 {
+    __register_atfork;
+  }
   GLIBC_PRIVATE {
     __libc_pthread_init;
-    __register_atfork;
   }
 }
 
