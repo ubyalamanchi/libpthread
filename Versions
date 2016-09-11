@@ -20,6 +20,7 @@ libc {
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     __libc_pthread_init;
+    # TODO: expose this publicly
     __register_atfork;
   }
 }
