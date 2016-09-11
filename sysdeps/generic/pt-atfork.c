@@ -20,10 +20,14 @@
 #include <pthread.h>
 #include <pt-internal.h>
 
+/* This is defined by newer gcc version unique for each module.  */
+extern void *__dso_handle __attribute__ ((__weak__,
+					  __visibility__ ("hidden")));
+
 int
 pthread_atfork (void (*prepare) (void),
 		void (*parent) (void),
 		void (*child) (void))
 {
-  return __register_atfork (prepare, parent, child);
+  return __register_atfork (prepare, parent, child, &__dso_handle == NULL ? NULL : __dso_handle);
 }

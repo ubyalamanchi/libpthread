@@ -147,6 +147,7 @@ struct atfork {
   void (*prepare) (void);
   void (*parent) (void);
   void (*child) (void);
+  void *dso_handle;
   struct atfork *prev;
   struct atfork *next;
 };
@@ -219,7 +220,8 @@ int
 __register_atfork (
     void (*prepare) (void),
     void (*parent) (void),
-    void (*child) (void))
+    void (*child) (void),
+    void *dso_handle)
 {
   struct atfork *new = malloc (sizeof (*new));
   if (!new)
@@ -228,6 +230,7 @@ __register_atfork (
   new->prepare = prepare;
   new->parent = parent;
   new->child = child;
+  new->dso_handle = dso_handle;
   new->prev = NULL;
 
   __mutex_lock (&atfork_lock);
