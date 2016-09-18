@@ -49,14 +49,14 @@ __pthread_dealloc (struct __pthread *pthread)
      by the standards.  */
   __pthread_mutex_lock (&pthread->state_lock);
   if (pthread->state != PTHREAD_EXITED)
-    pthread_cond_broadcast (&pthread->state_cond);
+    __pthread_cond_broadcast (&pthread->state_cond);
   __pthread_mutex_unlock (&pthread->state_lock);
 
   /* We do not actually deallocate the thread structure, but add it to
      a list of re-usable thread structures.  */
-  pthread_mutex_lock (&__pthread_free_threads_lock);
+  __pthread_mutex_lock (&__pthread_free_threads_lock);
   __pthread_enqueue (&__pthread_free_threads, pthread);
-  pthread_mutex_unlock (&__pthread_free_threads_lock);
+  __pthread_mutex_unlock (&__pthread_free_threads_lock);
 
   /* Setting PTHREAD->STATE to PTHREAD_TERMINATED makes this TCB
      available for reuse.  After that point, we can no longer assume

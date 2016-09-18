@@ -191,15 +191,15 @@ extern pthread_rwlock_t __pthread_threads_lock;
 
 #define __pthread_getid(thread) \
   ({ struct __pthread *__t;                                                  \
-     pthread_rwlock_rdlock (&__pthread_threads_lock);                        \
+     __pthread_rwlock_rdlock (&__pthread_threads_lock);                      \
      __t = __pthread_threads[thread - 1];                                    \
-     pthread_rwlock_unlock (&__pthread_threads_lock);                        \
+     __pthread_rwlock_unlock (&__pthread_threads_lock);                      \
      __t; })
 
 #define __pthread_setid(thread, pthread) \
-  pthread_rwlock_wrlock (&__pthread_threads_lock);                           \
+  __pthread_rwlock_wrlock (&__pthread_threads_lock);                         \
   __pthread_threads[thread - 1] = pthread;                                   \
-  pthread_rwlock_unlock (&__pthread_threads_lock);
+  __pthread_rwlock_unlock (&__pthread_threads_lock);
 
 /* Similar to pthread_self, but returns the thread descriptor instead
    of the thread ID.  */
