@@ -29,6 +29,6 @@ struct __pthread_once
 };
 
 #define __PTHREAD_ONCE_INIT \
-	{ 0, __PTHREAD_SPIN_LOCK_INITIALIZER }
+	(struct __pthread_once) { 0, __PTHREAD_SPIN_LOCK_INITIALIZER }
 
 #endif /* bits/once.h */
