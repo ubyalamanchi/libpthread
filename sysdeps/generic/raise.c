@@ -18,12 +18,12 @@
    License along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
+#include <pthreadP.h>
 #include <signal.h>
 #include <unistd.h>
 
-#pragma weak pthread_kill
-#pragma weak pthread_self
+#pragma weak __pthread_kill
+#pragma weak __pthread_self
 int
 raise (int signo)
 {
@@ -31,10 +31,10 @@ raise (int signo)
      "the effect of the raise() function shall be equivalent to
      calling: pthread_kill(pthread_self(), sig);"  */
 
-  if (pthread_kill)
+  if (__pthread_kill)
     {
       int err;
-      err = pthread_kill (pthread_self (), signo);
+      err = __pthread_kill (__pthread_self (), signo);
       if (err)
 	{
 	  errno = err;
