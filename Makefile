@@ -231,12 +231,12 @@ endif
 
 CPPFLAGS += \
 	  -DENABLE_TLS					\
-	  $(addprefix -I, $(SYSDEP_PATH))		\
-	  -imacros $(srcdir)/not-in-libc.h
+	  $(addprefix -I, $(SYSDEP_PATH))
 
 ifeq ($(IN_GLIBC),no)
 CPPFLAGS += \
-	  -imacros $(srcdir)/include/libc-symbols.h
+	  -imacros $(srcdir)/include/libc-symbols.h	\
+	  -imacros $(srcdir)/not-in-libc.h
 endif
 
 ifeq ($(IN_GLIBC),yes)
