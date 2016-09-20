@@ -22,8 +22,7 @@
 
 
 void
-__flockfile (stream)
-     FILE *stream;
+__flockfile (FILE *stream)
 {
 #ifdef SHARED
   __libc_ptf_call (_IO_flockfile, (stream), 0);

@@ -23,8 +23,7 @@
 
 
 void
-__funlockfile (stream)
-     FILE *stream;
+__funlockfile (FILE *stream)
 {
 #ifdef SHARED
   __libc_ptf_call (_IO_funlockfile, (stream), 0);

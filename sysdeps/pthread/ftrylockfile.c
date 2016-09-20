@@ -23,8 +23,7 @@
 
 
 int
-__ftrylockfile (stream)
-     FILE *stream;
+__ftrylockfile (FILE *stream)
 {
 #ifdef SHARED
   return __libc_ptf_call (_IO_ftrylockfile, (stream), 0);
