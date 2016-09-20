@@ -43,7 +43,7 @@ pthread_join (pthread_t thread, void **status)
   /* Rely on pthread_cond_wait being a cancellation point to make
      pthread_join one too.  */
   while (pthread->state == PTHREAD_JOINABLE)
-    pthread_cond_wait (&pthread->state_cond, &pthread->state_lock);
+    __pthread_cond_wait (&pthread->state_cond, &pthread->state_lock);
 
   pthread_cleanup_pop (0);
 

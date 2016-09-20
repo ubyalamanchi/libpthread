@@ -139,7 +139,7 @@ __pthread_alloc (struct __pthread **pthread)
     }
 
  retry:
-  pthread_rwlock_wrlock (&__pthread_threads_lock);
+  __pthread_rwlock_wrlock (&__pthread_threads_lock);
 
   if (__pthread_num_threads < __pthread_max_threads)
     {
@@ -148,7 +148,7 @@ __pthread_alloc (struct __pthread **pthread)
       new->thread = 1 + __pthread_num_threads++;
       __pthread_threads[new->thread - 1] = NULL;
 
-      pthread_rwlock_unlock (&__pthread_threads_lock);
+      __pthread_rwlock_unlock (&__pthread_threads_lock);
 
       *pthread = new;
       return 0;
@@ -157,7 +157,7 @@ __pthread_alloc (struct __pthread **pthread)
   else if (__pthread_num_threads >= PTHREAD_THREADS_MAX)
     {
       /* We have reached the limit on the number of threads per process.  */
-      pthread_rwlock_unlock (&__pthread_threads_lock);
+      __pthread_rwlock_unlock (&__pthread_threads_lock);
 
       free (new);
       return EAGAIN;
@@ -169,7 +169,7 @@ __pthread_alloc (struct __pthread **pthread)
      memory allocation, since that's a potentially blocking operation.  */
   max_threads = __pthread_max_threads;
 
-  pthread_rwlock_unlock (&__pthread_threads_lock);
+  __pthread_rwlock_unlock (&__pthread_threads_lock);
 
   /* Allocate a new lookup table that's twice as large.  */
   new_max_threads
@@ -181,13 +181,13 @@ __pthread_alloc (struct __pthread **pthread)
       return ENOMEM;
     }
 
-  pthread_rwlock_wrlock (&__pthread_threads_lock);
+  __pthread_rwlock_wrlock (&__pthread_threads_lock);
 
   /* Check if nobody else has already enlarged the table.  */
   if (max_threads != __pthread_max_threads)
     {
       /* Yep, they did.  */
-      pthread_rwlock_unlock (&__pthread_threads_lock);
+      __pthread_rwlock_unlock (&__pthread_threads_lock);
 
       /* Free the newly allocated table and try again to allocate a slot.  */
       free (threads);
@@ -210,7 +210,7 @@ __pthread_alloc (struct __pthread **pthread)
   new->thread = 1 + __pthread_num_threads++;
   __pthread_threads[new->thread - 1] = NULL;
 
-  pthread_rwlock_unlock (&__pthread_threads_lock);
+  __pthread_rwlock_unlock (&__pthread_threads_lock);
 
   free (old_threads);
 

@@ -17,11 +17,12 @@ libc {
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     __pthread_get_cleanup_stack;
   }
+  GLIBC_2.22 {
+    __register_atfork;
+  }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     __libc_pthread_init;
-    # TODO: expose this publicly
-    __register_atfork;
   }
 }
 
@@ -93,6 +94,7 @@ libpthread {
     __pthread_key_create;
 
     pthread_kill;
+    __pthread_kill;
 
     pthread_mutex_destroy; pthread_mutex_getprioceiling;
     pthread_mutex_init; pthread_mutex_lock; pthread_mutex_setprioceiling;

@@ -25,7 +25,7 @@
 #include <pt-internal.h>
 
 int
-pthread_kill (pthread_t thread, int sig)
+__pthread_kill (pthread_t thread, int sig)
 {
   struct __pthread *pthread;
   struct hurd_signal_detail detail;
@@ -49,3 +49,4 @@ pthread_kill (pthread_t thread, int sig)
   __spin_lock (&ss->lock);
   return _hurd_raise_signal (ss, sig, &detail);
 }
+strong_alias (__pthread_kill, pthread_kill)

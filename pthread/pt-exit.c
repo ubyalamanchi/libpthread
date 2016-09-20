@@ -39,14 +39,14 @@ __pthread_exit (void *status)
   /* Run any cancelation handlers.  According to POSIX, the
      cancellation cleanup handlers should be called with cancellation
      disabled.  */
-  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
+  __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
   for (handlers = __pthread_get_cleanup_stack ();
        *handlers;
        *handlers = (*handlers)->__next)
     (*handlers)->__handler ((*handlers)->__arg);
 
-  pthread_setcancelstate (oldstate, &oldstate);
+  __pthread_setcancelstate (oldstate, &oldstate);
 
   /* Decrease the number of threads.  We use an atomic operation to
      make sure that only the last thread calls `exit'.  */
@@ -86,7 +86,7 @@ __pthread_exit (void *status)
 
       /* Broadcast the condition.  This will wake up threads that are
          waiting to join us.  */
-      pthread_cond_broadcast (&self->state_cond);
+      __pthread_cond_broadcast (&self->state_cond);
       __pthread_mutex_unlock (&self->state_lock);
 
       break;

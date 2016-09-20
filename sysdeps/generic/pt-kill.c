@@ -18,10 +18,11 @@
    License along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <pthreadP.h>
 #include "sig-internal.h"
 
 int
-pthread_kill (pthread_t tid, int signo)
+__pthread_kill (pthread_t tid, int signo)
 {
   siginfo_t si;
   memset (&si, 0, sizeof (si));
@@ -29,4 +30,4 @@ pthread_kill (pthread_t tid, int signo)
 
   return pthread_kill_siginfo_np (tid, si);
 }
-
+strong_alias (__pthread_kill, pthread_kill)
