@@ -74,7 +74,7 @@ __pthread_thread_terminate (struct __pthread *thread)
   /* Terminate and release all that's left.  */
   err = __thread_terminate_release (kernel_thread, mach_task_self (),
 				    kernel_thread, reply_port,
-				    stackaddr, stacksize);
+				    (vm_address_t) stackaddr, stacksize);
 
   /* The kernel does not support it yet.  Leak but at least terminate
      correctly.  */
