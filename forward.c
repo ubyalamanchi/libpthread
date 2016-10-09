@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <shlib-compat.h>
 #include <pthread-functions.h>
+#include <fork.h>
 
 /* Pointers to the libc functions.  */
 struct pthread_functions __libc_pthread_functions attribute_hidden;
@@ -171,13 +172,13 @@ atfork_pthread_prepare (void)
     return;
 
   while(1)
-  {
-    if (last_handler->prepare != NULL)
-      last_handler->prepare ();
-    if (last_handler == handlers)
-      break;
-    last_handler = last_handler->prev;
-  }
+    {
+      if (last_handler->prepare != NULL)
+	last_handler->prepare ();
+      if (last_handler == handlers)
+	break;
+      last_handler = last_handler->prev;
+    }
 }
 text_set_element (_hurd_atfork_prepare_hook, atfork_pthread_prepare);
 
@@ -191,11 +192,11 @@ atfork_pthread_parent (void)
   __mutex_unlock (&atfork_lock);
 
   while (handlers)
-  {
-    if (handlers->parent != NULL)
-      handlers->parent ();
-    handlers = handlers->next;
-  }
+    {
+      if (handlers->parent != NULL)
+	handlers->parent ();
+      handlers = handlers->next;
+    }
 }
 text_set_element (_hurd_atfork_parent_hook, atfork_pthread_parent);
 
@@ -209,11 +210,11 @@ atfork_pthread_child (void)
   __mutex_unlock (&atfork_lock);
 
   while (handlers)
-  {
-    if (handlers->child != NULL)
-      handlers->child ();
-    handlers = handlers->next;
-  }
+    {
+      if (handlers->child != NULL)
+	handlers->child ();
+      handlers = handlers->next;
+    }
 }
 text_set_element (_hurd_atfork_child_hook, atfork_pthread_child);
 
@@ -237,7 +238,7 @@ __register_atfork (
   __mutex_lock (&atfork_lock);
   new->next = fork_handlers;
   if (fork_handlers)
-  	fork_handlers->prev = new;
+    fork_handlers->prev = new;
   fork_handlers = new;
   if (!fork_last_handler)
     fork_last_handler = new;
@@ -246,4 +247,34 @@ __register_atfork (
   return 0;
 }
 
-/* TODO: unregister_atfork, and define UNREGISTER_ATFORK, for module unload support */
+void
+__unregister_atfork (void *dso_handle)
+{
+  struct atfork **handlers, *prev = NULL, *next;
+  __mutex_lock (&atfork_lock);
+  handlers = &fork_handlers;
+  while (*handlers)
+    {
+      if ((*handlers)->dso_handle == dso_handle)
+	{
+	  /* Drop this handler from the list.  */
+	  if (*handlers == fork_last_handler)
+	    {
+	      /* Was last, new last is prev, if any.  */
+	      fork_last_handler = prev;
+	    }
+
+	  next = (*handlers)->next;
+	  if (next)
+	    next->prev = prev;
+	  *handlers = next;
+	}
+      else
+	{
+	  /* Just proceed to next handler.  */
+	  prev = *handlers;
+	  handlers = &prev->next;
+	}
+    }
+  __mutex_unlock (&atfork_lock);
+}
