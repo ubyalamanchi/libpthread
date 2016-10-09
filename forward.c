@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <shlib-compat.h>
 #include <pthread-functions.h>
+#include <fork.h>
 
 /* Pointers to the libc functions.  */
 struct pthread_functions __libc_pthread_functions attribute_hidden;
@@ -245,4 +246,34 @@ __register_atfork (
   return 0;
 }
 
-/* TODO: unregister_atfork, and define UNREGISTER_ATFORK, for module unload support */
+void
+__unregister_atfork (void *dso_handle)
+{
+  struct atfork **handlers, *prev = NULL, *next;
+  __mutex_lock (&atfork_lock);
+  handlers = &fork_handlers;
+  while (*handlers)
+    {
+      if ((*handlers)->dso_handle == dso_handle)
+	{
+	  /* Drop this handler from the list.  */
+	  if (*handlers == fork_last_handler)
+	    {
+	      /* Was last, new last is prev, if any.  */
+	      fork_last_handler = prev;
+	    }
+
+	  next = (*handlers)->next;
+	  if (next)
+	    next->prev = prev;
+	  *handlers = next;
+	}
+      else
+	{
+	  /* Just proceed to next handler.  */
+	  prev = *handlers;
+	  handlers = &prev->next;
+	}
+    }
+  __mutex_unlock (&atfork_lock);
+}
