@@ -170,13 +170,13 @@ atfork_pthread_prepare (void)
     return;
 
   while(1)
-  {
-    if (last_handler->prepare != NULL)
-      last_handler->prepare ();
-    if (last_handler == handlers)
-      break;
-    last_handler = last_handler->prev;
-  }
+    {
+      if (last_handler->prepare != NULL)
+	last_handler->prepare ();
+      if (last_handler == handlers)
+	break;
+      last_handler = last_handler->prev;
+    }
 }
 text_set_element (_hurd_atfork_prepare_hook, atfork_pthread_prepare);
 
@@ -190,11 +190,11 @@ atfork_pthread_parent (void)
   __mutex_unlock (&atfork_lock);
 
   while (handlers)
-  {
-    if (handlers->parent != NULL)
-      handlers->parent ();
-    handlers = handlers->next;
-  }
+    {
+      if (handlers->parent != NULL)
+	handlers->parent ();
+      handlers = handlers->next;
+    }
 }
 text_set_element (_hurd_atfork_parent_hook, atfork_pthread_parent);
 
@@ -208,11 +208,11 @@ atfork_pthread_child (void)
   __mutex_unlock (&atfork_lock);
 
   while (handlers)
-  {
-    if (handlers->child != NULL)
-      handlers->child ();
-    handlers = handlers->next;
-  }
+    {
+      if (handlers->child != NULL)
+	handlers->child ();
+      handlers = handlers->next;
+    }
 }
 text_set_element (_hurd_atfork_child_hook, atfork_pthread_child);
 
@@ -236,7 +236,7 @@ __register_atfork (
   __mutex_lock (&atfork_lock);
   new->next = fork_handlers;
   if (fork_handlers)
-  	fork_handlers->prev = new;
+    fork_handlers->prev = new;
   fork_handlers = new;
   if (!fork_last_handler)
     fork_last_handler = new;
