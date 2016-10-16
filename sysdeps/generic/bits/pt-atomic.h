@@ -1,5 +1,5 @@
-/* Atomic operations.  i386 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* Atomic operations.  gcc intrinsics version.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,42 +25,32 @@ typedef __volatile int __atomic_t;
 static inline void
 __atomic_inc (__atomic_t *__var)
 {
-  __asm__ __volatile ("lock; incl %0" : "=m" (*__var) : "m" (*__var));
+  __atomic_add_fetch (__var, 1, __ATOMIC_SEQ_CST);
 }
 
 static inline void
 __atomic_dec (__atomic_t *__var)
 {
-  __asm__ __volatile ("lock; decl %0" : "=m" (*__var) : "m" (*__var));
+  __atomic_add_fetch (__var, -1, __ATOMIC_SEQ_CST);
 }
 
 static inline int
 __atomic_dec_and_test (__atomic_t *__var)
 {
-  unsigned char __ret;
-
-  __asm__ __volatile ("lock; decl %0; sete %1"
-		      : "=m" (*__var), "=qm" (__ret) : "m" (*__var));
-  return __ret != 0;
+  __atomic_t res = __atomic_add_fetch (__var, -1, __ATOMIC_SEQ_CST);
+  return res == 0;
 }
 
-/* We assume that an __atomicptr_t is only used for pointers to
-   word-aligned objects, and use the lowest bit for a simple lock.  */
-typedef __volatile int * __atomicptr_t;
+#define atomic_loadx(p) __atomic_load_8(p, __ATOMIC_SEQ_CST)
+#define atomic_storex(p, v) __atomic_store_8(p, v, __ATOMIC_SEQ_CST)
 
-/* Actually we don't implement that yet, and assume that we run on
-   something that has the i486 instruction set.  */
-static inline int
-__atomicptr_compare_and_swap (__atomicptr_t *__ptr, void *__oldval,
-			      void * __newval)
+static inline char atomic_casx_bool(uint64_t *p,
+    uint32_t elo, uint32_t ehi, uint32_t nlo, uint32_t nhi)
 {
-  char __ret;
-  int __dummy;
-
-  __asm__ __volatile ("lock; cmpxchgl %3, %1; sete %0"
-		      : "=q" (__ret), "=m" (*__ptr), "=a" (__dummy)
-		      : "r" (__newval), "m" (*__ptr), "a" (__oldval));
-  return __ret;
+  uint64_t n = nlo | (((uint64_t) nhi) << 32);
+  uint64_t e = elo | (((uint64_t) ehi) << 32);
+  return __atomic_compare_exchange(p,
+    &e, &n, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 }
 
 #endif

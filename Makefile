@@ -189,7 +189,8 @@ headers :=				\
               bits/mutex-attr.h			\
               bits/rwlock.h			\
               bits/rwlock-attr.h		\
-	      bits/semaphore.h
+              bits/semaphore.h			\
+              bits/xint.h
 
 ifeq ($(IN_GLIBC),yes)
 distribute :=
