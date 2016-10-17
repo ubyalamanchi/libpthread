@@ -322,9 +322,9 @@ extern const struct __pthread_barrierattr __pthread_default_barrierattr;
 extern const struct __pthread_mutexattr __pthread_default_mutexattr;
 
 /* Default rdlock attributes.  */
-const struct __pthread_rwlockattr __pthread_default_rwlockattr;
+extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
 
 /* Default condition attributes.  */
-const struct __pthread_condattr __pthread_default_condattr;
+extern const struct __pthread_condattr __pthread_default_condattr;
 
 #endif /* pt-internal.h */
