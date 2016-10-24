@@ -142,5 +142,6 @@ libpthread {
   }
   GLIBC_PRIVATE {
     __shm_directory;
+    __pthread_threads;
   }
 }

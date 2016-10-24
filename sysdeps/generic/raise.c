@@ -24,6 +24,7 @@
 
 #pragma weak __pthread_kill
 #pragma weak __pthread_self
+#pragma weak __pthread_threads
 int
 raise (int signo)
 {
@@ -31,7 +32,7 @@ raise (int signo)
      "the effect of the raise() function shall be equivalent to
      calling: pthread_kill(pthread_self(), sig);"  */
 
-  if (__pthread_kill)
+  if (__pthread_kill && __pthread_threads)
     {
       int err;
       err = __pthread_kill (__pthread_self (), signo);

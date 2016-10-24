@@ -22,5 +22,6 @@
 
 extern pthread_t __pthread_self (void);
 extern int __pthread_kill (pthread_t threadid, int signo);
+extern struct __pthread **__pthread_threads;
 
 #endif	/* pthreadP.h */
