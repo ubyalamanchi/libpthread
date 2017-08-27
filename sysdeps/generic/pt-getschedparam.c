@@ -24,8 +24,9 @@ int
 __pthread_getschedparam (pthread_t thread, int *policy,
 		       struct sched_param *param)
 {
-  return ENOSYS;
+  *policy = SCHED_OTHER;
+  param->__sched_priority = 0;
+  return 0;
 }
 
 strong_alias (__pthread_getschedparam, pthread_getschedparam);
-stub_warning (pthread_getschedparam)
