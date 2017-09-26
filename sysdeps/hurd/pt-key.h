@@ -18,11 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <pthread.h>
-#include <hurd/ihash.h>
 #include <libc-lockP.h>
 
 #define PTHREAD_KEY_MEMBERS \
-  hurd_ihash_t thread_specifics;
+  void **thread_specifics;		/* This is only resized by the thread, and always growing */ \
+  unsigned thread_specifics_size;	/* Number of entries in thread_specifics */
 
 #define PTHREAD_KEY_INVALID (void *) (-1)
 

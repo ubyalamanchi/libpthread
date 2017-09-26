@@ -220,12 +220,6 @@ SYSDEP_PATH = $(srcdir)/sysdeps/$(MICROKERNEL)/hurd/i386	\
 VPATH += $(SYSDEP_PATH)
 
 ifeq ($(IN_GLIBC),no)
-HURDLIBS = ihash
-else
-LDLIBS-pthread.so = -lihash
-endif
-
-ifeq ($(IN_GLIBC),no)
 installhdrs :=
 installhdrsubdir := .
 
