@@ -21,8 +21,9 @@
 #include <pt-internal.h>
 
 int
-pthread_mutexattr_init (pthread_mutexattr_t *attr)
+__pthread_mutexattr_init (pthread_mutexattr_t *attr)
 {
   *attr = __pthread_default_mutexattr;
   return 0;
 }
+weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
