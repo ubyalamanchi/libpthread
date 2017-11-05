@@ -175,6 +175,8 @@ headers :=				\
               bits/pthread.h			\
               bits/pthread-np.h			\
               bits/pthreadtypes.h		\
+              bits/pthreadtypes-arch.h		\
+              bits/thread-shared-types.h	\
               bits/mutex.h			\
               bits/condition.h			\
               bits/condition-attr.h		\
