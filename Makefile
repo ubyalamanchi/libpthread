@@ -87,12 +87,14 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-mutexattr-getpshared pt-mutexattr-gettype			    \
 	pt-mutexattr-setprioceiling pt-mutexattr-setprotocol		    \
 	pt-mutexattr-setpshared pt-mutexattr-settype			    \
+	pt-mutexattr-getrobust pt-mutexattr-setrobust			    \
 									    \
 	pt-mutex-init pt-mutex-destroy					    \
 	pt-mutex-lock pt-mutex-trylock pt-mutex-timedlock		    \
 	pt-mutex-unlock							    \
 	pt-mutex-transfer-np						    \
 	pt-mutex-getprioceiling pt-mutex-setprioceiling			    \
+	pt-mutex-consistent 						    \
 									    \
 	pt-rwlock-attr							    \
 	pt-rwlockattr-init pt-rwlockattr-destroy			    \
@@ -175,6 +177,8 @@ headers :=				\
               bits/pthread.h			\
               bits/pthread-np.h			\
               bits/pthreadtypes.h		\
+              bits/pthreadtypes-arch.h		\
+              bits/thread-shared-types.h	\
               bits/mutex.h			\
               bits/condition.h			\
               bits/condition-attr.h		\
@@ -218,12 +222,6 @@ SYSDEP_PATH = $(srcdir)/sysdeps/$(MICROKERNEL)/hurd/i386	\
 	 $(srcdir)/include
 
 VPATH += $(SYSDEP_PATH)
-
-ifeq ($(IN_GLIBC),no)
-HURDLIBS = ihash
-else
-LDLIBS-pthread.so = -lihash
-endif
 
 ifeq ($(IN_GLIBC),no)
 installhdrs :=

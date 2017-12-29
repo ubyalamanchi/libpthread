@@ -21,7 +21,7 @@
 #include <pt-internal.h>
 
 int
-pthread_mutexattr_settype (pthread_mutexattr_t *attr, int type)
+__pthread_mutexattr_settype (pthread_mutexattr_t *attr, int type)
 {
   switch (type)
     {
@@ -35,3 +35,4 @@ pthread_mutexattr_settype (pthread_mutexattr_t *attr, int type)
       return EINVAL;
     }
 }
+weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
