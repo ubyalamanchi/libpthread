@@ -1,4 +1,4 @@
-/* pthread_getspecific.  Generic version.
+/* pthread_getspecific.  Hurd version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,10 +18,22 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <pthread.h>
+
 #include <pt-internal.h>
 
-int
-pthread_getspecific (pthread_key_t key)
+void *
+__pthread_getspecific (pthread_key_t key)
 {
-  return EINVAL;
+  struct __pthread *self;
+
+  if (key < 0 || key >= __pthread_key_count
+      || __pthread_key_destructors[key] == PTHREAD_KEY_INVALID)
+    return NULL;
+
+  self = _pthread_self ();
+  if (key >= self->thread_specifics_size)
+    return 0;
+
+  return self->thread_specifics[key];
 }
+strong_alias (__pthread_getspecific, pthread_getspecific);

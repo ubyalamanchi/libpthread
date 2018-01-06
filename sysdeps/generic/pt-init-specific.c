@@ -1,4 +1,4 @@
-/* __pthread_init_specific.  Generic version.
+/* __pthread_init_specific.  Hurd version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,10 +18,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <pthread.h>
+#include <stdlib.h>
+
 #include <pt-internal.h>
 
 error_t
 __pthread_init_specific (struct __pthread *thread)
 {
+  thread->thread_specifics = 0;
+  thread->thread_specifics_size = 0;
   return 0;
 }

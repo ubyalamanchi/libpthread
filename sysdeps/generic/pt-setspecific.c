@@ -18,10 +18,34 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <pthread.h>
+
 #include <pt-internal.h>
 
 int
-pthread_setspecific (pthread_key_t key, const void *value)
+__pthread_setspecific (pthread_key_t key, const void *value)
 {
-  return EINVAL;
+  struct __pthread *self = _pthread_self ();
+
+  if (key < 0 || key >= __pthread_key_count
+      || __pthread_key_destructors[key] == PTHREAD_KEY_INVALID)
+    return EINVAL;
+
+  if (key >= self->thread_specifics_size)
+    {
+      /* Amortize reallocation cost.  */
+      int newsize = 2 * key + 1;
+      void **new = realloc (self->thread_specifics,
+			    newsize * sizeof (new[0]));
+      if (! new )
+	return ENOMEM;
+
+      memset (&new[self->thread_specifics_size], 0,
+	      (newsize - self->thread_specifics_size) * sizeof (new[0]));
+      self->thread_specifics = new;
+      self->thread_specifics_size = newsize;
+    }
+
+  self->thread_specifics[key] = (void*) value;
+  return 0;
 }
+strong_alias (__pthread_setspecific, pthread_setspecific);
