@@ -32,7 +32,7 @@ ifeq ($(IN_GLIBC),no)
 dir := libpthread
 makemode := library
 else
-subdir := libpthread
+subdir := htl
 
 pthread-version := 0.3
 
