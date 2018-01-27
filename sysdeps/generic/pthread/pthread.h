@@ -314,6 +314,28 @@ extern int pthread_mutexattr_setprotocol(pthread_mutexattr_t *__attr,
 	__THROW __nonnull ((1));
 #endif
 
+#ifdef __USE_XOPEN2K
+/* Get the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_getrobust (const pthread_mutexattr_t *__attr,
+					int *__robustness)
+     __THROW __nonnull ((1, 2));
+# ifdef __USE_GNU
+extern int pthread_mutexattr_getrobust_np (const pthread_mutexattr_t *__attr,
+					   int *__robustness)
+     __THROW __nonnull ((1, 2));
+# endif
+
+/* Set the robustness flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
+					int __robustness)
+     __THROW __nonnull ((1));
+# ifdef __USE_GNU
+extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
+					   int __robustness)
+     __THROW __nonnull ((1));
+# endif
+#endif
+
 
 /* Return the value of the process shared attribute in *ATTR in
    *PSHARED.  */
@@ -594,6 +616,16 @@ extern int pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *__restrict
 extern int pthread_rwlockattr_setpshared (pthread_rwlockattr_t *__attr,
 					  int __pshared)
 	__THROW __nonnull ((1));
+
+/* Return current setting of reader/writer preference.  */
+extern int pthread_rwlockattr_getkind_np (const pthread_rwlockattr_t *
+					  __restrict __attr,
+					  int *__restrict __pref)
+     __THROW __nonnull ((1, 2));
+
+/* Set reader/write preference.  */
+extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
+					  int __pref) __THROW __nonnull ((1));
 
 
 /* rwlocks.  */
