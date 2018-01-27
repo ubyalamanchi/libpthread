@@ -19,6 +19,7 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
+#include <hurd/signal.h>
 
 error_t
 __pthread_sigstate_init (struct __pthread *thread)
