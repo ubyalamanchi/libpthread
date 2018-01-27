@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <libio.h>
 #include <libc-lock.h>
 
 
