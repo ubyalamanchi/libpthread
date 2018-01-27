@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <shlib-compat.h>
 #include <pthread-functions.h>
+#include <libc-lock.h>
 #include <fork.h>
 
 /* Pointers to the libc functions.  */
@@ -155,7 +156,7 @@ struct atfork {
 };
 
 /* TODO: better locking */
-static struct mutex atfork_lock;
+__libc_lock_define_initialized(static, atfork_lock);
 static struct atfork *fork_handlers, *fork_last_handler;
 
 static void
@@ -163,10 +164,10 @@ atfork_pthread_prepare (void)
 {
   struct atfork *handlers, *last_handler;
 
-  __mutex_lock (&atfork_lock);
+  __libc_lock_lock (atfork_lock);
   handlers = fork_handlers;
   last_handler = fork_last_handler;
-  __mutex_unlock (&atfork_lock);
+  __libc_lock_unlock (atfork_lock);
 
   if (!last_handler)
     return;
@@ -187,9 +188,9 @@ atfork_pthread_parent (void)
 {
   struct atfork *handlers;
 
-  __mutex_lock (&atfork_lock);
+  __libc_lock_lock (atfork_lock);
   handlers = fork_handlers;
-  __mutex_unlock (&atfork_lock);
+  __libc_lock_unlock (atfork_lock);
 
   while (handlers)
     {
@@ -205,9 +206,9 @@ atfork_pthread_child (void)
 {
   struct atfork *handlers;
 
-  __mutex_lock (&atfork_lock);
+  __libc_lock_lock (atfork_lock);
   handlers = fork_handlers;
-  __mutex_unlock (&atfork_lock);
+  __libc_lock_unlock (atfork_lock);
 
   while (handlers)
     {
@@ -235,14 +236,14 @@ __register_atfork (
   new->dso_handle = dso_handle;
   new->prev = NULL;
 
-  __mutex_lock (&atfork_lock);
+  __libc_lock_lock (atfork_lock);
   new->next = fork_handlers;
   if (fork_handlers)
     fork_handlers->prev = new;
   fork_handlers = new;
   if (!fork_last_handler)
     fork_last_handler = new;
-  __mutex_unlock (&atfork_lock);
+  __libc_lock_unlock (atfork_lock);
 
   return 0;
 }
@@ -252,7 +253,7 @@ void
 __unregister_atfork (void *dso_handle)
 {
   struct atfork **handlers, *prev = NULL, *next;
-  __mutex_lock (&atfork_lock);
+  __libc_lock_lock (atfork_lock);
   handlers = &fork_handlers;
   while (*handlers)
     {
@@ -277,5 +278,5 @@ __unregister_atfork (void *dso_handle)
 	  handlers = &prev->next;
 	}
     }
-  __mutex_unlock (&atfork_lock);
+  __libc_lock_unlock (atfork_lock);
 }
