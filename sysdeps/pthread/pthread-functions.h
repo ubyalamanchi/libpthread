@@ -121,9 +121,9 @@ struct pthread_functions
   int (*ptr_pthread_rwlock_rdlock) (pthread_rwlock_t *);
   int (*ptr_pthread_rwlock_wrlock) (pthread_rwlock_t *);
   int (*ptr_pthread_rwlock_unlock) (pthread_rwlock_t *);
-  int (*ptr_pthread_key_create) (pthread_key_t *, void (*) (void *));
-  void *(*ptr_pthread_getspecific) (pthread_key_t);
-  int (*ptr_pthread_setspecific) (pthread_key_t, const void *);
+  int (*ptr___pthread_key_create) (pthread_key_t *, void (*) (void *));
+  void *(*ptr___pthread_getspecific) (pthread_key_t);
+  int (*ptr___pthread_setspecific) (pthread_key_t, const void *);
   void (*ptr__IO_flockfile) (FILE *);
   void (*ptr__IO_funlockfile) (FILE *);
   int (*ptr__IO_ftrylockfile) (FILE *);
