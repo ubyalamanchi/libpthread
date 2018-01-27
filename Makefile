@@ -34,8 +34,6 @@ makemode := library
 else
 subdir := htl
 
-pthread-version := 0.3
-
 srcdir = .
 endif
 
