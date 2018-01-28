@@ -1,5 +1,5 @@
 libc {
-  GLIBC_2.13 {
+  GLIBC_2.21 {
     pthread_attr_destroy; pthread_attr_getdetachstate;
     pthread_attr_getinheritsched; pthread_attr_getschedparam;
     pthread_attr_getschedpolicy; pthread_attr_getscope; pthread_attr_init;
