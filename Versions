@@ -136,7 +136,7 @@ libpthread {
     __pthread_spin_lock; __pthread_spin_trylock; __pthread_spin_unlock;
     _pthread_spin_lock;
   }
-  GLIBC_2.17 {
+  GLIBC_2.21 {
     pthread_hurd_cond_wait_np;
     pthread_hurd_cond_timedwait_np;
   }
