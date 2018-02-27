@@ -16,26 +16,9 @@
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-ifeq ($(..),)
-# non-glibc build
-IN_GLIBC = no
-else
-# glibc build
-IN_GLIBC = yes
-# set elf=yes, to retain compatibility with glibc < 2.16
-ifeq ($(elf),)
-elf = yes
-endif
-endif
-
-ifeq ($(IN_GLIBC),no)
-dir := libpthread
-makemode := library
-else
 subdir := htl
 
 srcdir = .
-endif
 
 MICROKERNEL := mach
 SYSDEPS := lockfile
@@ -157,15 +140,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 
 libpthread-static-only-routines = pt-atfork
 
-ifeq ($(IN_GLIBC),no)
-SRCS := $(addsuffix .c,$(libpthread-routines))
-OBJS = $(addsuffix .o,$(basename $(notdir $(SRCS))))
-
-OTHERTAGS =
-
-libname = libpthread
-endif
-
 headers :=				\
               pthread.h				\
               pthread/pthread.h			\
@@ -193,7 +167,6 @@ headers :=				\
               bits/rwlock-attr.h		\
 	      bits/semaphore.h
 
-ifeq ($(IN_GLIBC),yes)
 distribute :=
 
 routines := forward libc_pthread_init alloca_cutoff
@@ -206,7 +179,6 @@ extra-libs-others := $(extra-libs)
 install-lib := libpthread.so
 
 include ../Makeconfig
-endif
 
 SYSDEP_PATH = $(srcdir)/sysdeps/$(MICROKERNEL)/hurd/i386	\
 	 $(srcdir)/sysdeps/$(MICROKERNEL)/i386			\
@@ -221,41 +193,15 @@ SYSDEP_PATH = $(srcdir)/sysdeps/$(MICROKERNEL)/hurd/i386	\
 
 VPATH += $(SYSDEP_PATH)
 
-ifeq ($(IN_GLIBC),no)
-installhdrs :=
-installhdrsubdir := .
-
-include ../Makeconf
-endif
-
 CPPFLAGS += \
 	  -DENABLE_TLS					\
 	  $(addprefix -I, $(SYSDEP_PATH))
 
-ifeq ($(IN_GLIBC),no)
-CPPFLAGS += \
-	  -imacros $(srcdir)/include/libc-symbols.h	\
-	  -imacros $(srcdir)/not-in-libc.h
-endif
-
-ifeq ($(IN_GLIBC),yes)
 CFLAGS-lockfile.c = -D_IO_MTSAFE_IO
 
 all: # Make this the default target; it will be defined in Rules.
-endif
 
-ifeq ($(IN_GLIBC),no)
-inst_libdir = $(libdir)
-endif
-
-ifeq ($(IN_GLIBC),no)
-install: install-headers
-install-headers: $(addprefix $(includedir)/, $(headers))
-
-install: $(inst_libdir)/libpthread2.a $(inst_libdir)/libpthread2_pic.a
-else
 subdir_install: $(inst_libdir)/libpthread2.a
-endif
 
 # XXX: If $(inst_libdir)/libpthread2.a is installed and
 # $(inst_libdir)/libpthread is not, we can have some issues.
@@ -273,7 +219,6 @@ $(inst_libdir)/libpthread2_pic.a: $(inst_libdir)/libpthread_pic.a
 	mv $< $@
 	$(INSTALL_DATA) $(srcdir)/libpthread_pic.a $<
 
-ifeq ($(IN_GLIBC),yes)
 libc-link.so = $(common-objpfx)libc.so
 
 extra-B-pthread.so = -B$(common-objpfx)htl/
@@ -312,47 +257,3 @@ $(addprefix $(objpfx), \
 endif
 
 generated += libpthread_nonshared.a
-endif
-
-ifeq ($(IN_GLIBC),no)
-.PHONY: $(addprefix $(includedir)/, $(headers))
-
-$(addprefix $(includedir)/, $(headers)):
-	@set -e;							\
-	t="$@";								\
-	t=$${t#$(includedir)/};						\
-	header_ok=0;							\
-	for dir in $(SYSDEP_PATH);					\
-	do								\
-	  if test -e "$$dir/$$t";					\
-	  then								\
-	    tdir=`dirname "$@"`;					\
-	    if test ! -e $$tdir;					\
-	    then							\
-	      mkdir $$tdir;						\
-	    fi;								\
-	    echo $(INSTALL_DATA) "$$dir/$$t" "$@";			\
-	    $(INSTALL_DATA) "$$dir/$$t" "$@";				\
-	    header_ok=1;						\
-	    break;							\
-	  fi;								\
-	done;								\
-	if test "$${header_ok}" -ne 1;					\
-	then								\
-	  echo;								\
-	  echo '*** 'The header file \`$@\' is required, but not	\
-provided, by;								\
-	  echo '*** 'this configuration.  Please report this to the	\
-maintainer.;								\
-	  echo;								\
-	  false;							\
-	fi
-
-#  ifeq ($(VERSIONING),yes)
-#
-#  # Adding this dependency gets it included in the command line,
-#  # where ld will read it as a linker script.
-#  $(libname).so.$(hurd-version): $(srcdir)/$(libname).map
-#
-#  endif
-endif
