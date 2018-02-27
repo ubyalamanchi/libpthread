@@ -21,8 +21,6 @@
 #include <pthread.h>		/* Must come before <stdio.h>! */
 #include <stdio.h>
 
-#ifdef _STDIO_USES_IOSTREAM
-
 void
 _cthreads_flockfile (_IO_FILE *fp)
 {
@@ -61,5 +59,3 @@ void funlockfile (_IO_FILE *)
      __attribute__ ((alias ("_cthreads_funlockfile")));
 int ftrylockfile (_IO_FILE *)
      __attribute__ ((alias ("_cthreads_ftrylockfile")));
-
-#endif /* _STDIO_USES_IOSTREAM */
