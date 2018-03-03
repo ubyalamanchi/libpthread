@@ -1,4 +1,4 @@
-/* Copyright (C) 2016 Free Software Foundation, Inc.
+/* Copyright (C) 2016-2018 Free Software Foundation, Inc.
    Contributed by Agustina Arzille <avarzille@riseup.net>, 2016.
 
    This program is free software; you can redistribute it and/or
