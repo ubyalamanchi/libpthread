@@ -19,8 +19,7 @@
 #ifndef _BITS_THREAD_ATTR_H
 #define _BITS_THREAD_ATTR_H	1
 
-#define __need_schedparam
-#include <bits/sched.h>
+#include <sched.h>
 
 #define __need_size_t
 #include <stddef.h>
@@ -33,7 +32,7 @@ enum __pthread_contentionscope;
    that not all of them are supported on all systems.  */
 struct __pthread_attr
 {
-  struct __sched_param __schedparam;
+  struct sched_param __schedparam;
   void *__stackaddr;
   size_t __stacksize;
   size_t __guardsize;
