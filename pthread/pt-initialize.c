@@ -25,8 +25,6 @@
 #include <pthread.h>
 #include <pthread-functions.h>
 
-DEFINE_HOOK (__pthread_init, (void));
-
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions =
   {
@@ -83,5 +81,4 @@ ___pthread_init (void)
 #if IS_IN (libpthread)
   __libc_pthread_init(&pthread_functions);
 #endif
-  RUN_HOOK (__pthread_init, ());
 }
