@@ -19,18 +19,10 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_MUTEX_H
+#define _BITS_MUTEX_H	1
 
-#ifndef __need_pthread_mutex
-# define _BITS_MUTEX_H	1
-#endif
-
-#ifndef __pthread_mutex_defined
-# if defined __need_pthread_mutex || defined _BITS_MUTEX_H
-#  undef __need_pthread_mutex
-#  define __pthread_mutex_defined
-
-#  include <bits/spin-lock.h>
-#  include <bits/mutex-attr.h>
+#include <bits/spin-lock.h>
+#include <bits/mutex-attr.h>
 
 /* User visible part of a mutex.  */
 struct __pthread_mutex
@@ -52,22 +44,19 @@ struct __pthread_mutex
 
 /* Initializer for a mutex.  N.B.  this also happens to be compatible
    with the cthread mutex initializer.  */
-#  define __PTHREAD_MUTEX_INITIALIZER \
+#define __PTHREAD_MUTEX_INITIALIZER \
     { __PTHREAD_SPIN_LOCK_INITIALIZER, __PTHREAD_SPIN_LOCK_INITIALIZER, 0, 0, 0, 0, 0, 0 }
 
-#  define __PTHREAD_ERRORCHECK_MUTEXATTR ((struct __pthread_mutexattr *) ((unsigned long) __PTHREAD_MUTEX_ERRORCHECK + 1))
+#define __PTHREAD_ERRORCHECK_MUTEXATTR ((struct __pthread_mutexattr *) ((unsigned long) __PTHREAD_MUTEX_ERRORCHECK + 1))
 
-#  define __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER \
+#define __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER \
     { __PTHREAD_SPIN_LOCK_INITIALIZER, __PTHREAD_SPIN_LOCK_INITIALIZER, 0, 0,	\
 	__PTHREAD_ERRORCHECK_MUTEXATTR, 0, 0, 0 }
 
-#  define __PTHREAD_RECURSIVE_MUTEXATTR ((struct __pthread_mutexattr *) ((unsigned long) __PTHREAD_MUTEX_RECURSIVE + 1))
+#define __PTHREAD_RECURSIVE_MUTEXATTR ((struct __pthread_mutexattr *) ((unsigned long) __PTHREAD_MUTEX_RECURSIVE + 1))
 
-#  define __PTHREAD_RECURSIVE_MUTEX_INITIALIZER \
+#define __PTHREAD_RECURSIVE_MUTEX_INITIALIZER \
     { __PTHREAD_SPIN_LOCK_INITIALIZER, __PTHREAD_SPIN_LOCK_INITIALIZER, 0, 0,	\
 	__PTHREAD_RECURSIVE_MUTEXATTR, 0, 0, 0 }
-
-# endif
-#endif /* Not __pthread_mutex_defined.  */
 
 #endif /* bits/mutex.h */

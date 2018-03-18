@@ -17,17 +17,9 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_MUTEX_H
+#define _BITS_MUTEX_H	1
 
-#ifndef __need_pthread_mutex
-# define _BITS_MUTEX_H	1
-#endif
-
-#ifndef __pthread_mutex_defined
-# if defined __need_pthread_mutex || defined _BITS_MUTEX_H
-#  undef __need_pthread_mutex
-#  define __pthread_mutex_defined
-
-#  include <bits/mutex-attr.h>
+#include <bits/mutex-attr.h>
 
 /* User visible part of a mutex.  */
 struct __pthread_mutex
@@ -53,8 +45,5 @@ struct __pthread_mutex
 
 #define __PTHREAD_RECURSIVE_MUTEX_INITIALIZER   \
   { 0, 0, 0, 0, __PTHREAD_MUTEX_RECURSIVE + 1, 0, 0, 0 }
-
-# endif
-#endif /* Not __pthread_mutex_defined.  */
 
 #endif /* bits/mutex.h */
