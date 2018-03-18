@@ -24,8 +24,7 @@
 #include <sched.h>
 #include <signal.h>
 #include <assert.h>
-#define __need_res_state
-#include <resolv.h>
+#include <bits/types/res_state.h>
 
 #include <bits/pt-atomic.h>
 
